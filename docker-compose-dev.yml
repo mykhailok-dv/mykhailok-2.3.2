@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  php-apache:
+    build:
+      args:
+        - DEVELOPER_MODE=1 # needed for the build stage
+    user: docker:docker
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
+    labels:
+      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      # develop with extension that allows setting livereload host and port - https://github.com/lokcito/livereload-extensions
+      - traefik.grunt.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.grunt.frontend.entryPoints=grunt
+      - traefik.grunt.protocol=http
+      - traefik.grunt.port=35729
+      - traefik.gruntHttp.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.gruntHttp.frontend.entryPoints=gruntHttp
+      - traefik.gruntHttp.backend=grunt
+      - traefik.gruntHttp.protocol=http
+      - traefik.gruntHttp.port=35729
+    extra_hosts:
+      # For Linux users only till docker.host.internal is not available by default
+      # https://github.com/docker/libnetwork/pull/2348/files
+      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local:127.0.0.1"
+      - "host.docker.internal:172.17.0.1"
+    environment:
+      # Must be set to some of the domains for xdebug to work. Should have server configured in
+      # Preferences > Language and Frameworks > PHP > Servers
+      # Or just run the project with the same domain and debug enabled in the browser
+      - PHP_IDE_CONFIG=serverName=mykhailok-2.3.2.local
+#      - PHP_XDEBUG_ENABLED=1 # needed for the entrypoint script
+
+# IMPORTANT FOR MAC USERS!!!
+# ALL BELOW is for Mac only to enable docker sync stack
+#    volumes:
+#      - mykhailok-2.3.2.local-sync:/var/www/html:nocopy
+
+#volumes:
+#  mykhailok-2.3.2.local-sync:
+#    external: true
