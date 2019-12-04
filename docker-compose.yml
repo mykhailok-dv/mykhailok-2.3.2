@@ -1,5 +1,5 @@
 # SSL certificates for development
-# $ mkcert mykhailok-2.3.2.local www.mykhailok-2.3.2.local
+# $ mkcert mykhailok-2.3.2.local www.mykhailok-2.3.2.local mykhailokhrypko.local www.mykhailokhrypko.local
 #
 # DEVELOPMENT:
 # $ docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
@@ -24,15 +24,15 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
       - traefik.http.frontend.entryPoints=http
-      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
       - traefik.https.frontend.entryPoints=https
       - traefik.https.protocol=https
       - traefik.https.port=443
     # Must add extra_hosts to be written to /etc/hosts - otherwise containerized application can not curl itself
     extra_hosts:
-      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local:127.0.0.1"
+      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local mykhailokhrypko.local www.mykhailokhrypko.local:127.0.0.1"
 #    links:
 #      - memcached
     external_links:

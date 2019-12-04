@@ -8,10 +8,10 @@ services:
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     labels:
-      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
-      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
+      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
       # develop with extension that allows setting livereload host and port - https://github.com/lokcito/livereload-extensions
-      - traefik.grunt.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local
+      - traefik.grunt.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
       - traefik.grunt.frontend.entryPoints=grunt
       - traefik.grunt.protocol=http
       - traefik.grunt.port=35729
@@ -23,7 +23,7 @@ services:
     extra_hosts:
       # For Linux users only till docker.host.internal is not available by default
       # https://github.com/docker/libnetwork/pull/2348/files
-      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local:127.0.0.1"
+      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local mykhailokhrypko.local www.mykhailokhrypko.local:127.0.0.1"
       - "host.docker.internal:172.17.0.1"
     environment:
       # Must be set to some of the domains for xdebug to work. Should have server configured in
