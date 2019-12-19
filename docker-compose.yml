@@ -1,5 +1,5 @@
 # SSL certificates for development
-# $ mkcert mykhailok-2.3.2.local www.mykhailok-2.3.2.local mykhailokhrypko.local www.mykhailokhrypko.local
+# $ mkcert mykhailokhrypko.local www.mykhailokhrypko.local mykhailokhrypko-additional.local www.mykhailokhrypko-additional.local
 #
 # DEVELOPMENT:
 # $ docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
@@ -12,7 +12,7 @@
 version: '3.7'
 services:
   php-apache:
-    container_name: mykhailok-2.3.2.local
+    container_name: mykhailokhrypko.local
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -24,15 +24,15 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
+      - traefik.http.frontend.rule=Host:mykhailokhrypko.local,www.mykhailokhrypko.local,mykhailokhrypko-additional.local,www.mykhailokhrypko-additional.local
       - traefik.http.frontend.entryPoints=http
-      - traefik.https.frontend.rule=Host:mykhailok-2.3.2.local,www.mykhailok-2.3.2.local,mykhailokhrypko.local,www.mykhailokhrypko.local
+      - traefik.https.frontend.rule=Host:mykhailokhrypko.local,www.mykhailokhrypko.local,mykhailokhrypko-additional.local,www.mykhailokhrypko-additional.local
       - traefik.https.frontend.entryPoints=https
       - traefik.https.protocol=https
       - traefik.https.port=443
     # Must add extra_hosts to be written to /etc/hosts - otherwise containerized application can not curl itself
     extra_hosts:
-      - "mykhailok-2.3.2.local www.mykhailok-2.3.2.local mykhailokhrypko.local www.mykhailokhrypko.local:127.0.0.1"
+      - "mykhailokhrypko.local www.mykhailokhrypko.local mykhailokhrypko-additional.local www.mykhailokhrypko-additional.local:127.0.0.1"
 #    links:
 #      - memcached
     external_links:
