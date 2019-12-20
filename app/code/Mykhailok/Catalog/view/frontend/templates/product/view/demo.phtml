@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var Magento\Framework\View\TemplateEngine\Php $this
+ * @var Magento\Framework\View\Element\Template $block
+ * @var Magento\Framework\View\Element\Messages $messagesElement
+ */
+
+$messagesElement = Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\View\Element\Messages');
+$message_html = $messagesElement->addError($block->getMessage())->getGroupedHtml();
+?>
+
+<?= $message_html ?>
