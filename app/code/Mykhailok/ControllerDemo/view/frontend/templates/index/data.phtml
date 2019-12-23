@@ -2,15 +2,14 @@
 /**
  * @var \Mykhailok\ControllerDemo\Block\View\DemoTemplate $block
  */
+$request = $block->getRequest();
 ?>
-
-<?php if ($block->isRequestParams(['name', 'lastname','repository_url'])): ?>
+<?php if ($block->hasRequestParams(['name', 'lastname','repository_url'])): ?>
     <div class="details">
-        <p>Hello, <strong><?= $block->getRequestParam('name') . ' ' . $block->getRequestParam('lastname') ?></strong>
-        </p>
-        <?php $repository_url = $block->getRequestParam('repository_url'); ?>
-        <p>Your repository: <a href="<?= $repository_url ?>"><?= $repository_url ?></a></p>
+        <p><?= __('Hello, <strong>%1 %2</strong>', $block->escapeHtml($request->getParam('name')), $block->escapeHtml($request->getParam('lastname'))) ?></p>
+        <?php $repositoryUrl = $request->getParam('repository_url'); ?>
+        <p><a href="<?= $block->escapeUrl($repositoryUrl) ?>"><?= $block->escapeHtml($repositoryUrl) ?></a></p>
     </div>
 <?php else: ?>
-    <a href="<?= $block->escapeUrl($block->getUrl('mykhailok_controller_demo/index/forward')) ?>">Forward</a>
+    <a href="<?= $block->escapeUrl($block->getUrl('mykhailok_controller_demo/index/forward')) ?>"><?= $block->escapeHtml(__('Forward')) ?></a>
 <?php endif; ?>
