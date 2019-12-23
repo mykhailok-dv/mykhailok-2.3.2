@@ -1,13 +1,24 @@
 <?xml version="1.0"?>
 
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="content">
+        <referenceContainer name="header.panel">
             <block class="Magento\Cms\Block\Block" name="demo-store" before="-">
                 <arguments>
                     <argument name="block_id" xsi:type="string">demo-store</argument>
                 </arguments>
             </block>
+        </referenceContainer>
+        <referenceContainer name="div.sidebar.additional">
+            <container htmlClass="sidebar sidebar-static_image" htmlTag="div" name="sidebar.static.image"
+                       as="sidebar_static_image">
+                <block class="Magento\Cms\Block\Block" name="static-image">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">static-image</argument>
+                    </arguments>
+                </block>
+            </container>
         </referenceContainer>
     </body>
 </page>
