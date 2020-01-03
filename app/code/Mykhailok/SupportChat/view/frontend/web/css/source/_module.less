@@ -1,0 +1,118 @@
+@border-radius__message: 10*@border-width__base;
+& when (@media-common = true) {
+	#mykhailok-support-chat {
+		background-color: @color-white;
+		display: block;
+		position: fixed;
+		z-index: @modal-popup__z-index;
+		transition-property: right;
+		transition-duration: .3s;
+		padding: @popup__padding;
+		right: -100%;
+		top: 0;
+		width: calc(~'100% - ' 2 * @popup__padding);
+		height: calc(~'100% - ' 2 * @popup__padding);
+
+		&.active {
+			right: 0;
+		}
+
+		label[for="message"] {
+			display: none;
+		}
+
+		.item {
+			border-radius: .25*@font-size__base;
+			margin: .25*@font-size__base 0;
+			padding: .25*@font-size__base;
+
+			&.left {
+				text-align: left;
+				background-color: #84ffff;
+				margin-right: 20%;
+			}
+
+			&.right {
+				text-align: right;
+				background-color: #abffab;
+				margin-left: 20%;
+			}
+
+			&:first-child {
+				.item-time {
+					display: none;
+				}
+
+				.item-message {
+					text-align: center;
+				}
+			}
+		}
+
+		.messages {
+			overflow-y: scroll;
+			max-height: 10.0*@font-size__base;
+			margin: .5*@font-size__base;
+		}
+
+		.actions-toolbar.form-buttons {
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+
+	.mykhailok-support-chat-link {
+		&.chat-link {
+			z-index: @modal-popup__z-index;
+			padding: .25*@font-size__base;
+			font-size: @button__font-size__l;
+			display: inline-block;
+			position: relative;
+			float: right;
+			margin-top: 10px;
+		}
+	}
+}
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+	#mykhailok-support-chat {
+		border: @border-width__base solid @border-color__base;
+		border-radius: @border-radius__message;
+		bottom: @font-size__base;
+		top: auto;
+		height: auto;
+		max-height: 400px;
+		right: -@screen__xxs - 2*@popup__padding - 2*@border-width__base;
+		width: @screen__xxs;
+
+		&.active {
+			right: @font-size__base;
+		}
+	}
+
+	.mykhailok-support-chat-link {
+		&.chat-link {
+			background-color: rgba(255, 255, 255, 0.5);
+			font-size: 4*@font-size__base;
+			border: @border-width__base solid @border-color__base;
+			border-radius: @border-radius__message;
+			bottom: @font-size__base;
+			position: fixed;
+		}
+
+		&.open-chat {
+			right: -80px - .25*2*@font-size__base - 2*@border-width__base;
+
+			&.active {
+				right: @font-size__base;
+				transition-property: right;
+				transition-duration: .3s;
+			}
+		}
+
+		&.toogle-chat {
+			right: @font-size__base;
+			bottom: 7.5*@font-size__base; /*todo: change position.*/
+		}
+	}
+}

@@ -1,13 +1,12 @@
 <?xml version="1.0"?>
+
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="product.info.main">
-            <block class="Magento\Framework\View\Element\Messages" name="product.info.demo">
-                <action method="addError">
-                    <argument name="message" xsi:type="string">This is a demo product. You can add them to cart and place order only to test the Magento capabilities</argument>
-                </action>
-            </block>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="product.info.demo"
+                   template="Mykhailok_Catalog::product/view/demo.phtml"/>
         </referenceContainer>
     </body>
 </page>

@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var Magento\Framework\View\TemplateEngine\Php $this
+ * @var Magento\Framework\View\Element\Template $block
+ * @var Magento\Framework\View\Element\Messages $messages_element
+ */
+
+$objectManager = Magento\Framework\App\ObjectManager::getInstance();
+$messages_element = $objectManager->get('Magento\Framework\View\Element\Messages');
+
+$message = __(
+    '<p>This is a demo product. You can add them to cart and place order only to test the Magento capabilities</p>'
+);
+
+$message_html = $messages_element->addError($message)->getGroupedHtml();
+?>
+
+<?= $message_html ?>

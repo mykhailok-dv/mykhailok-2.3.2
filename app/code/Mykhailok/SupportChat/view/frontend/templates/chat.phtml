@@ -1,0 +1,54 @@
+<?php /** @var \Magento\Framework\View\Element\Template $block */ ?>
+<div id="mykhailok-support-chat" data-mage-init='{"mykhailok_SupportChat_chat": {
+                      "action": "<?= $block->escapeUrl($block->getUrl('mykhailok_support_chat/message/index')) ?>"
+                  }}'>
+    <h3><?= $block->escapeHtml(__('Message to administrator')) ?></h3>
+    <div class="messages">
+        <div class="item left">
+            <div class="item-time"></div>
+            <div class="item-message">Please, write your question.</div>
+        </div>
+    </div>
+    <div class="form-wrapper">
+        <form class="form"
+              action="javascript:void(0);"
+              id="mykhailok-support-chat-form"
+              method="post"
+              data-mage-init='
+              {
+                  "validation": {}
+              }'
+        >
+            <div class="field textarea required">
+                <label class="label" for="message">
+                    <span><?= $block->escapeHtml(__('Message')) ?></span>
+                </label>
+                <div class="control">
+                    <textarea name="message"
+                              id="message"
+                              title="<?= $block->escapeHtmlAttr(__('Your message')) ?>"
+                              class="input-text"
+                              type="text"
+                              data-validate="{required:true}"
+                              required
+                              rows="2"></textarea>
+                </div>
+            </div>
+            <div class="actions-toolbar form-buttons">
+                <div class="close">
+                    <button type="button"
+                            id="mykhailok-support-chat-close-button"
+                    ><?= $block->escapeHtml(__('Close')) ?></button>
+                </div>
+                <div class="primary">
+                    <input type="hidden" name="hideit" id="hideit" value=""/>
+                    <button type="submit" title="<?= $block->escapeHtmlAttr(__('Save')) ?>"
+                            class="action submit primary"
+                            id="mykhailok-support-chat-submit-button">
+                        <span><?= $block->escapeHtml(__('Save')) ?></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
