@@ -1,0 +1,23 @@
+{
+    "mykhailok_support_chat": {
+        "column": {
+            "support_chat_message_id": true,
+            "author_type": true,
+            "author_id": true,
+            "author_name": true,
+            "message": true,
+            "website_id": true,
+            "chat_hash": true,
+            "created_at": true
+        },
+        "index": {
+            "MYKHAILOK_SUPPORT_CHAT_WEBSITE_ID": true,
+            "MYKHAILOK_SUPPORT_CHAT_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MYKHAILOK_SUPPORT_CHAT_WEBSITE_ID_STORE_WEBSITE_WEBSITE_ID": true,
+            "MYKHAILOK_SUPPORT_CHAT_AUTHOR_ID_WEBSITE_ID": true
+        }
+    }
+}

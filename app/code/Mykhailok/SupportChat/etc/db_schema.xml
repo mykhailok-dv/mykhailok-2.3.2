@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="mykhailok_support_chat" resource="default" engine="innodb" comment="Support Chat">
+        <column xsi:type="int"
+                name="support_chat_message_id"
+                padding="10"
+                unsigned="true"
+                nullable="false"
+                identity="true"
+                comment="Message ID"
+        />
+        <column xsi:type="tinyint"
+                name="author_type"
+                padding="2"
+                unsigned="true"
+                nullable="false"
+                comment="Will be either customer or admin"
+        />
+        <column xsi:type="int"
+                name="author_id"
+                padding="10"
+                unsigned="true"
+                nullable="false"
+                comment="Author ID"
+        />
+        <column xsi:type="varchar"
+                name="author_name"
+                length="255"
+                nullable="true"
+                comment="Author name"
+        />
+        <column xsi:type="text"
+                name="message"
+                nullable="false"
+                comment="Message text"
+        />
+        <column xsi:type="smallint"
+                name="website_id"
+                padding="5"
+                unsigned="true"
+                nullable="false"
+                comment="Store Website ID"
+                default="0"
+        />
+        <column xsi:type="varchar"
+                name="chat_hash"
+                length="255"
+                nullable="false"
+                comment="Chat hash"
+        />
+        <column xsi:type="timestamp"
+                name="created_at"
+                on_update="false"
+                nullable="false"
+                default="CURRENT_TIMESTAMP"
+                comment="Creation Time"
+        />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="support_chat_message_id"/>
+        </constraint>
+        <index referenceId="MYKHAILOK_SUPPORT_CHAT_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+        <index referenceId="MYKHAILOK_SUPPORT_CHAT_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+        <constraint xsi:type="foreign"
+                    referenceId="DV_CAMPUS_SUPPORT_CHAT_WS_ID_STORE_WS_WS_ID"
+                    table="mykhailok_support_chat"
+                    column="website_id"
+                    referenceTable="store_website"
+                    referenceColumn="website_id"
+                    onDelete="CASCADE"
+        />
+        <constraint xsi:type="unique"
+                    referenceId="MYKHAILOK_SUPPORT_CHAT_AUTHOR_ID_WS_ID"
+        >
+            <column name="author_id"/>
+            <column name="website_id"/>
+        </constraint>
+    </table>
+</schema>
