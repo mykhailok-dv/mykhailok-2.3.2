@@ -1,9 +1,9 @@
 define([
-    "jquery"
+    'jquery'
 ], function ($) {
-    "use strict";
+    'use strict';
 
-    $.widget("mykhailokSupportChat.toggleChat", {
+    $.widget('mykhailokSupportChat.toggleChat', {
         options: {
             widget: '.mykhailok-support-chat-link.open-chat'
         },
@@ -11,15 +11,15 @@ define([
         /**
          * @private
          */
-        "_create": function () {
-            $(this.element).on("click.namespace_mykhailok_SupportChat", $.proxy(this.toggleChat, this));
+        _create: function () {
+            $(this.element).on('click.namespace_mykhailok_SupportChat', $.proxy(this.toggleChat, this));
         },
 
         /**
          * @private
          */
-        "_destroy": function () {
-            $(this.element).off("click.namespace_mykhailok_SupportChat");
+        _destroy: function () {
+            $(this.element).off('click.namespace_mykhailok_SupportChat');
         },
 
         /**
@@ -27,7 +27,8 @@ define([
          * @see mykhailokSupportChat.openChatButton
          */
         toggleChat: function () {
-            $(this.element).toggleClass("enable");
+            $(this.element).toggleClass('enable');
+
             if ($(this.element).hasClass('enable')) {
                 $($(this.options.widget).get(0)).data('mykhailokSupportChatOpenChatButton').destroy();
                 $(this.element).html('-');
