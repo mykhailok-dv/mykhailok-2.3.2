@@ -1,0 +1,24 @@
+& when (@media-common = true) {
+	.lib-font-face(
+		@family-name: 'support-chat',
+		@font-path: '@{baseDir}fonts/support-chat/support-chat'
+	);
+
+	[class^="support-chat-icon"], [class*=" support-chat-icon"] {
+		font-family: 'support-chat' !important;
+		speak: none;
+		font-style: normal;
+		font-weight: normal;
+		font-variant: normal;
+		text-transform: none;
+		line-height: 1;
+
+		/* Better Font Rendering =========== */
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	.support-chat-icon-chat:before {
+		content: "\e96b";
+	}
+}

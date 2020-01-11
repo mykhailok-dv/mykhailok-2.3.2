@@ -5,12 +5,16 @@ define([
 ], function ($) {
     'use strict';
 
+    /**
+     * @property mykhailokSupportChat.chat
+     */
     $.widget('mykhailokSupportChat.chat', {
         options: {
             openLinkButtonSelector: '.mykhailok-support-chat-link.open-chat',
             closeChatButtonSelector: '#mykhailok-support-chat-close-button',
             submitMessageButtonSelector: '#mykhailok-support-chat-submit-button',
             form: '#mykhailok-support-chat',
+            chatContainerSelector: '',
             action: ''
         },
 
@@ -19,20 +23,28 @@ define([
          */
         _create: function () {
             this.modal = $(this.element).modal({
-                buttons: []
+                modalClass: 'mykhailok-support-chat-modal',
+                buttons: [],
+                title: $(this.options.form).find('h3').remove().html()
             });
-            $(document).on('mykhailok_SupportChat_showChat.namespace_mykhailok_SupportChat', $.proxy(this.showChat, this));
-            $(this.options.closeChatButtonSelector).on('click.namespace_mykhailok_SupportChat', $.proxy(this.hideChat, this));
-            $(this.options.submitMessageButtonSelector).on('click.namespace_mykhailok_SupportChat', $.proxy(this.submitMessage, this));
+            $(document)
+                .on('mykhailok_SupportChat_showChat.namespace_mykhailok_SupportChat', $.proxy(this.showChat, this));
+            $(this.options.closeChatButtonSelector)
+                .on('click.namespace_mykhailok_SupportChat', $.proxy(this.hideChat, this));
+            $(this.options.form)
+                .on('modalclosed.namespace_mykhailok_SupportChat', $.proxy(this.hideChat, this));
+            $(this.options.submitMessageButtonSelector)
+                .on('click.namespace_mykhailok_SupportChat', $.proxy(this.submitMessage, this));
+            this.chatContainer = $(this.options.chatContainerSelector);
         },
 
         /**
          * @private
          */
         _destroy: function () {
-            this.modal.closeModal();
             $(document).off('mykhailok_SupportChat_showChat.namespace_mykhailok_SupportChat');
             $(this.options.closeChatButtonSelector).off('click.namespace_mykhailok_SupportChat');
+            $(this.options.form).off('modalclosed.namespace_mykhailok_SupportChat');
             $(this.options.submitMessageButtonSelector).off('click.namespace_mykhailok_SupportChat');
         },
 
@@ -49,7 +61,10 @@ define([
          * @see openChatButton.openLinkButton()
          */
         hideChat: function () {
-            //$(this.element).removeClass('active');
+            if ($(this.element).hasClass('active')) {
+                $(this.element).removeClass('active');
+                $(this.options.form).data('mage-modal').closeModal();
+            }
             $(this.options.openLinkButtonSelector).trigger('mykhailok_SupportChat_hideChat');
         },
 
@@ -100,8 +115,8 @@ define([
                     $('body').trigger('processStop');
                     this.displayMessages([
                         {
-                            'message': formData.get('message'),
-                            'time': (+new Date()) / 1000
+                            'text': formData.get('message'),
+                            'time': +new Date() / 1000
                         }
                     ], true);
 
@@ -121,33 +136,17 @@ define([
 
         /**
          * Displaying messages into the chat.
-         *
-         * @param messages
-         * @param isAdmin
+         * @param {Array} messages
+         * @param {Boolean} isAdmin
          */
-        displayMessages: function (messages, isAdmin = false) {
-            var timeConverter;
-            timeConverter = function (timestamp) {
-                var a = new Date(timestamp * 1000),
-                    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        displayMessages: function (messages, isAdmin) {
+            var messageList = $(this.options.chatContainerSelector).find('.messages');
 
-                return `${a.getDate()} ${months[a.getMonth()]} ${a.getFullYear()} ${a.getHours()}:${a.getMinutes()}:${a.getSeconds()}`;
-            };
-
-            messages.forEach(function (item) {
-                var messageList = $('#mykhailok-support-chat .messages');
-                var element = $($('#mykhailok-support-chat').find('.messages').html());
-
-                if (isAdmin) {
-                    element.removeClass('left').addClass('right');
-                }
-
-                var title = (isAdmin ? 'Admin' : 'You') + ' | ' + timeConverter(item.time);
-                element.find('.item-time').html(title);
-                element.find('.item-message').html(item.message);
-                messageList.append(element[0]);
-                messageList.scrollTop(messageList[0].scrollHeight);
+            this.chatContainer.trigger('mykhailok_SupportChat_chat-messages-added.namespace_mykhailok_SupportChat', {
+                'messages': messages,
+                'isAdmin': isAdmin
             });
+            messageList.scrollTop(messageList[0].scrollHeight);
         }
     });
 

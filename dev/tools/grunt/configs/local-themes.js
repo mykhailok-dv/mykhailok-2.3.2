@@ -1,3 +1,4 @@
+// grunt exec:mykhailok_luma_en_US && grunt less:mykhailok_luma_en_US && grunt watch
 module.exports = {
     mykhailok_luma_uk_UA: {
         area: 'frontend',

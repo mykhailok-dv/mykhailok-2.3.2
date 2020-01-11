@@ -21,7 +21,7 @@ class Index extends \Magento\Framework\App\Action\Action implements
         foreach (range(0, random_int(0, 2)) as $key => $value) {
             $array[] = [
                 'time' => time(),
-                'message' => 'Message #' . ++$key . '. Says: ' . random_int(1, 100) . '. Good Luck!',
+                'text' => 'Message #' . ++$key . '. Says: ' . random_int(1, 100) . '. Good Luck!',
             ];
         }
 

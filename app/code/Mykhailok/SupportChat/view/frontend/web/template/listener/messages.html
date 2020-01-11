@@ -1,0 +1,6 @@
+<ul class="messages" data-bind="foreach: messages">
+    <li class="item" data-bind="css: { left: !isAdmin, right: isAdmin }">
+        <div class="item-time" data-bind="text: time"></div>
+        <div class="item-message" data-bind="text: text"></div>
+    </li>
+</ul>

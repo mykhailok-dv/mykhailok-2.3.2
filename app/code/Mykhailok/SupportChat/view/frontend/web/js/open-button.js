@@ -4,6 +4,9 @@ define([
 ], function ($) {
     'use strict';
 
+    /**
+     * @property mykhailokSupportChat.openChatButton
+     */
     $.widget('mykhailokSupportChat.openChatButton', {
         options: {
             hideButton: true
@@ -14,8 +17,10 @@ define([
          */
         _create: function () {
             $(this.element).on('click.namespace_mykhailok_SupportChat', $.proxy(this.openChat, this));
-            // eslint-disable-next-line max-len
-            $(this.element).on('mykhailok_SupportChat_hideChat.namespace_mykhailok_SupportChat', $.proxy(this.openLinkButton, this));
+            $(this.element).on(
+                'mykhailok_SupportChat_hideChat.namespace_mykhailok_SupportChat',
+                $.proxy(this.openLinkButton, this)
+            );
         },
 
         /**
