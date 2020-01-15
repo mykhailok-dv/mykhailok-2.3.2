@@ -1,11 +1,15 @@
 <?php /** @var \Magento\Framework\View\Element\Template $block */ ?>
 <div id="mykhailok-support-chat" data-mage-init='{"mykhailok_SupportChat_chat": {
-                      "action": "<?= $block->escapeUrl($block->getUrl('mykhailok_support_chat/message/index')) ?>",
+                      "action": "<?= $block->escapeUrl($block->getUrl('mykhailok_support_chat/message/save')) ?>",
                       "chatContainerSelector": "#mykhailok-support-chat-messages"
                   }}'>
     <h3><?= $block->escapeHtml(__('Message to administrator')) ?></h3>
 
-    <div id="mykhailok-support-chat-messages" data-bind="scope:'mykhailok-support-chat-messages'">
+    <div id="mykhailok-support-chat-messages"
+         data-bind="scope:'mykhailok-support-chat-messages'"
+         data-mage-init='{"mykhailok_SupportChat_loadMessages": {
+            "action": "<?= $block->escapeUrl(__($block->getUrl('mykhailok_support_chat/message/load'))) ?>"
+    }}'>
         <!-- ko template: getTemplate() --><!-- /ko -->
     </div>
 

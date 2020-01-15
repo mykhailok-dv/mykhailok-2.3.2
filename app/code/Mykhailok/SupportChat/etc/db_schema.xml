@@ -73,11 +73,5 @@
                     referenceColumn="website_id"
                     onDelete="CASCADE"
         />
-        <constraint xsi:type="unique"
-                    referenceId="MYKHAILOK_SUPPORT_CHAT_AUTHOR_ID_WS_ID"
-        >
-            <column name="author_id"/>
-            <column name="website_id"/>
-        </constraint>
     </table>
 </schema>

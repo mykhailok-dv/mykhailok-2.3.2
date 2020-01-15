@@ -1,99 +1,99 @@
 @border-radius__message: 10*@border-width__base;
 & when (@media-common = true) {
-	#mykhailok-support-chat {
-		display: none;
-		padding-bottom: @modal-popup__padding;
-		transition-property: right;
-		transition-duration: .3s;
+    #mykhailok-support-chat {
+        display: none;
+        padding-bottom: @modal-popup__padding;
+        transition-property: right;
+        transition-duration: .3s;
 
-		label[for="message"] {
-			display: none;
-		}
+        label[for="message"] {
+            display: none;
+        }
 
-		.item {
-			border-radius: .25*@font-size__base;
-			margin: .25*@font-size__base 0;
-			padding: .25*@font-size__base;
-			list-style-type: none;
+        .item {
+            border-radius: .25*@font-size__base;
+            margin: .25*@font-size__base 0;
+            padding: .25*@font-size__base;
+            list-style-type: none;
 
-			&.left {
-				text-align: left;
-				background-color: #84ffff;
-				margin-right: 20%;
-			}
+            &.left {
+                text-align: left;
+                background-color: #84ffff;
+                margin-right: 20%;
+            }
 
-			&.right {
-				text-align: right;
-				background-color: #abffab;
-				margin-left: 20%;
-			}
-		}
+            &.right {
+                text-align: right;
+                background-color: #abffab;
+                margin-left: 20%;
+            }
+        }
 
-		.messages {
-			padding: 0;
-			margin: 0;
-			overflow-y: scroll;
-			max-height: 10.0*@font-size__base;
-		}
+        .messages {
+            padding: 0;
+            margin: 0;
+            overflow-y: scroll;
+            max-height: 10.0*@font-size__base;
+        }
 
-		.actions-toolbar.form-buttons {
-			display: flex;
-			justify-content: space-between;
-		}
-	}
+        .actions-toolbar.form-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
 
-	.mykhailok-support-chat-link {
-		&.chat-link {
-			z-index: @modal-popup__z-index;
-			padding: .25*@font-size__base;
-			font-size: @button__font-size__l;
-			display: inline-block;
-			position: relative;
-			float: right;
-			margin-top: 10px;
-			text-decoration: none;
-		}
+    .mykhailok-support-chat-link {
+        &.chat-link {
+            z-index: @modal-popup__z-index;
+            padding: .25*@font-size__base;
+            font-size: @button__font-size__l;
+            display: inline-block;
+            position: relative;
+            float: right;
+            margin-top: 10px;
+            text-decoration: none;
+        }
 
-		span {
-			display: none;
-		}
-	}
+        span {
+            display: none;
+        }
+    }
 }
 
 .media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
-	.mykhailok-support-chat-modal {
-		.modal-inner-wrap {
-			width: @screen__xxs;
-			position: fixed;
-			bottom: 0;
-			left: auto;
-			margin: @font-size__base;
-		}
-	}
+    .mykhailok-support-chat-modal {
+        .modal-inner-wrap {
+            width: @screen__xxs;
+            position: fixed;
+            bottom: 0;
+            left: auto;
+            margin: @font-size__base;
+        }
+    }
 
-	.mykhailok-support-chat-link {
-		&.chat-link {
-			background-color: rgba(255, 255, 255, 0.5);
-			font-size: 4*@font-size__base;
-			border: @border-width__base solid @border-color__base;
-			border-radius: @border-radius__message;
-			bottom: @font-size__base;
-			position: fixed;
-		}
+    .mykhailok-support-chat-link {
+        &.chat-link {
+            background-color: rgba(255, 255, 255, 0.5);
+            font-size: 4*@font-size__base;
+            border: @border-width__base solid @border-color__base;
+            border-radius: @border-radius__message;
+            bottom: @font-size__base;
+            position: fixed;
+        }
 
-		&.open-chat {
-			right: -80px - .25*2*@font-size__base - 2*@border-width__base;
+        &.open-chat {
+            right: -80px - .25*2*@font-size__base - 2*@border-width__base;
 
-			&.active {
-				right: @font-size__base;
-				transition-property: right;
-				transition-duration: .3s;
-			}
-		}
+            &.active {
+                right: @font-size__base;
+                transition-property: right;
+                transition-duration: .3s;
+            }
+        }
 
-		&.toogle-chat {
-			right: @font-size__base;
-			bottom: 7.5*@font-size__base;
-		}
-	}
+        &.toogle-chat {
+            right: @font-size__base;
+            bottom: 7.5*@font-size__base;
+        }
+    }
 }

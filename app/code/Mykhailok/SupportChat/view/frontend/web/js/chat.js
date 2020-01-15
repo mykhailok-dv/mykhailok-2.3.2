@@ -25,17 +25,34 @@ define([
             this.modal = $(this.element).modal({
                 modalClass: 'mykhailok-support-chat-modal',
                 buttons: [],
-                title: $(this.options.form).find('h3').remove().html()
+                title: $(this.element).find('h3').remove().html()
             });
+
             $(document)
                 .on('mykhailok_SupportChat_showChat.namespace_mykhailok_SupportChat', $.proxy(this.showChat, this));
             $(this.options.closeChatButtonSelector)
                 .on('click.namespace_mykhailok_SupportChat', $.proxy(this.hideChat, this));
-            $(this.options.form)
-                .on('modalclosed.namespace_mykhailok_SupportChat', $.proxy(this.hideChat, this));
+            $(this.element)
+                .on('modalclosed.namespace_mykhailok_SupportChat', $.proxy(this.showChatButton, this));
             $(this.options.submitMessageButtonSelector)
                 .on('click.namespace_mykhailok_SupportChat', $.proxy(this.submitMessage, this));
             this.chatContainer = $(this.options.chatContainerSelector);
+        },
+
+        /**
+         * Hides the chat block.
+         * @see openChatButton.openLinkButton()
+         */
+        hideChat: function () {
+            $(this.element).data('mage-modal').closeModal();
+            this.showChatButton();
+        },
+
+        /**
+         * trigger event to show chat button(s)
+         */
+        showChatButton: function () {
+            $(this.options.openLinkButtonSelector).trigger('mykhailok_SupportChat_hideChat');
         },
 
         /**
@@ -44,7 +61,7 @@ define([
         _destroy: function () {
             $(document).off('mykhailok_SupportChat_showChat.namespace_mykhailok_SupportChat');
             $(this.options.closeChatButtonSelector).off('click.namespace_mykhailok_SupportChat');
-            $(this.options.form).off('modalclosed.namespace_mykhailok_SupportChat');
+            $(this.element).off('modalclosed.namespace_mykhailok_SupportChat');
             $(this.options.submitMessageButtonSelector).off('click.namespace_mykhailok_SupportChat');
         },
 
@@ -53,45 +70,32 @@ define([
          */
         showChat: function () {
             $(this.element).addClass('active');
-            $(this.options.form).data('mage-modal').openModal();
-        },
-
-        /**
-         * Hides the chat block.
-         * @see openChatButton.openLinkButton()
-         */
-        hideChat: function () {
-            if ($(this.element).hasClass('active')) {
-                $(this.element).removeClass('active');
-                $(this.options.form).data('mage-modal').closeModal();
-            }
-            $(this.options.openLinkButtonSelector).trigger('mykhailok_SupportChat_hideChat');
+            $(this.element).data('mage-modal').openModal();
         },
 
         /**
          * Submit form action.
          */
-        submitMessage: function () {
-            if (!this.validateForm()) {
+        submitMessage: function (e) {
+            if (!this.validateForm(e)) {
                 return;
             }
 
-            this.ajaxSubmit();
+            this.ajaxSubmit(e);
         },
 
         /**
          * Validate request form
          */
-        validateForm: function () {
-            return $(this.options.submitMessageButtonSelector).parents('form:first').valid();
+        validateForm: function (e) {
+            return $(e.currentTarget.form).valid();
         },
 
         /**
          * Submit request via AJAX. Add form key to the post data.
          */
-        ajaxSubmit: function () {
-            var form = $(this.options.submitMessageButtonSelector).parents('form:first'),
-                formData = new FormData(form[0]);
+        ajaxSubmit: function (e) {
+            var formData = new FormData(e.currentTarget.form);
 
             formData.append('form_key', $.mage.cookies.get('form_key'));
             formData.append('isAjax', 1);
@@ -112,25 +116,17 @@ define([
 
                 /** @inheritdoc */
                 success: function (data) {
-                    $('body').trigger('processStop');
-                    this.displayMessages([
-                        {
-                            'text': formData.get('message'),
-                            'time': +new Date() / 1000
-                        }
-                    ], true);
-
                     if (data.success) {
                         this.displayMessages(data.messages, false);
                     }
+
+                    $(e.currentTarget.form).find('textarea').val('');
                 },
 
                 /** @inheritdoc */
-                error: function () {
+                complete: function () {
                     $('body').trigger('processStop');
                 }
-            }).success(function () {
-                form.find('textarea').val('');
             });
         },
 
