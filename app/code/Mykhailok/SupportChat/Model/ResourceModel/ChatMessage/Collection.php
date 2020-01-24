@@ -1,50 +1,55 @@
 <?php
 declare(strict_types=1);
 
-namespace Mykhailok\SupportChat\Model\ResourceModel\Chat;
+namespace Mykhailok\SupportChat\Model\ResourceModel\ChatMessage;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Authorization\Model\UserContextInterface;
 
 class Collection extends AbstractCollection
 {
+    private static $authorTypes = [
+        UserContextInterface::USER_TYPE_ADMIN,
+        UserContextInterface::USER_TYPE_CUSTOMER,
+        UserContextInterface::USER_TYPE_GUEST,
+    ];
+
     /**
      * @inheritDoc
      */
-    protected function _construct()
+    protected function _construct(): void
     {
         parent::_construct();
         $this->_init(
-            \Mykhailok\SupportChat\Model\Chat::class,
-            \Mykhailok\SupportChat\Model\ResourceModel\Chat::class
-            );
+            \Mykhailok\SupportChat\Model\ChatMessage::class,
+            \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage::class
+        );
     }
 
     /**
      * @param int $authorType
      * @return $this
      */
-    public function addAuthorTypeFilter(int $authorType)
+    public function addAuthorTypeFilter(int $authorType): self
     {
-        $userContextReflectionClass = new \ReflectionClass(\Magento\Authorization\Model\UserContextInterface::class);
-        $authorTypes = $userContextReflectionClass->getConstants();
-
         /**
          * Filter will be applies when $authorType is const from UserContextInterface.
          * @see \Magento\Authorization\Model\UserContextInterface
          */
-        if (isset(array_flip($authorTypes)[$authorType])) {
-            return $this->addFieldToFilter('author_type', $authorType);
-        } else {
-            return $this;
+        if (in_array($authorType, self::$authorTypes, true)) {
+            $this->addFieldToFilter('author_type', $authorType);
         }
+
+        return $this;
     }
 
     /**
      * @param \DateTime $from
      * @param \DateTime $to
+     * @throws \Exception
      * @return $this
      */
-    public function addCreatedAtRangeFilter(\DateTime $from, \DateTime $to = null)
+    public function addCreatedAtRangeFilter(\DateTime $from, \DateTime $to = null): self
     {
         return $this->addFieldToFilter('created_at', [
             'from' => $from,
@@ -57,7 +62,7 @@ class Collection extends AbstractCollection
      * @param int $websiteId
      * @return $this
      */
-    public function addWebsiteFilter(int $websiteId)
+    public function addWebsiteFilter(int $websiteId): self
     {
         return $this->addFieldToFilter('website_id', $websiteId);
     }
@@ -66,7 +71,7 @@ class Collection extends AbstractCollection
      * @param $authorId
      * @return $this
      */
-    public function addAuthorIdFilter($authorId)
+    public function addAuthorIdFilter($authorId): self
     {
         return $this->addFieldToFilter('author_id', $authorId);
     }
@@ -75,7 +80,7 @@ class Collection extends AbstractCollection
      * @param $chatHash
      * @return $this
      */
-    public function addChatHashFilter($chatHash)
+    public function addChatHashFilter($chatHash): self
     {
         return $this->addFieldToFilter('chat_hash', $chatHash);
     }

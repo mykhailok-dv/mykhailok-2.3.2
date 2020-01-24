@@ -21,7 +21,7 @@
                 name="author_id"
                 padding="10"
                 unsigned="true"
-                nullable="false"
+                nullable="true"
                 comment="Author ID"
         />
         <column xsi:type="varchar"

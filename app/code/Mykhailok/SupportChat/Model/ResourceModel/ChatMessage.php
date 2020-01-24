@@ -5,7 +5,7 @@ namespace Mykhailok\SupportChat\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 
-class Chat extends AbstractDb
+class ChatMessage extends AbstractDb
 {
     protected function _construct()
     {

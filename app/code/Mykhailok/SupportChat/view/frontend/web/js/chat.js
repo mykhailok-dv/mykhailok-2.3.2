@@ -116,11 +116,13 @@ define([
 
                 /** @inheritdoc */
                 success: function (data) {
-                    if (data.success) {
-                        this.displayMessages(data.messages, false);
-                    }
-
+                    this.displayMessages(data.messages, false);
                     $(e.currentTarget.form).find('textarea').val('');
+                },
+
+                /** @inheritdoc */
+                error: function () {
+                    this.hideChat();
                 },
 
                 /** @inheritdoc */
