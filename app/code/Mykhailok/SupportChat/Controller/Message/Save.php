@@ -122,8 +122,7 @@ class Save extends \Magento\Framework\App\Action\Action implements
             $this->messageManager->addErrorMessage(__('Unable to connect to the store support team.'));
         }
 
-        return $result
-            ->setData($this->responseData->getData());
+        return $result->setData($this->responseData->getData());
     }
 
     /**

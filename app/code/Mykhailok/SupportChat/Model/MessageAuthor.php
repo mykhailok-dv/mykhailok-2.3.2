@@ -46,7 +46,7 @@ class MessageAuthor extends \Magento\Framework\DataObject
     private $sessionManager;
 
     /**
-     * @var ResourceModel\ChatMessage\CollectionFactory
+     * @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection
      */
     private $chatMessageCollection;
 
@@ -57,7 +57,7 @@ class MessageAuthor extends \Magento\Framework\DataObject
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Framework\Session\SessionManager $sessionManager
-     * @param ResourceModel\ChatMessage\Collection $chatMessageCollection
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection
      * @param array $data
      */
     public function __construct(
@@ -66,7 +66,7 @@ class MessageAuthor extends \Magento\Framework\DataObject
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Session\SessionManager $sessionManager,
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatMessageCollection,
+        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection,
         array $data = []
     ) {
         parent::__construct($data);
@@ -83,7 +83,9 @@ class MessageAuthor extends \Magento\Framework\DataObject
      */
     public function __call($method, $args)
     {
-        if ($this->_getData('id') === null || $this->_getData('name') === null) {
+        if (strpos($method, 'set') !== 0
+            && ($this->_getData('id') === null || $this->_getData('name') === null)
+        ) {
             $this->_init();
         }
 
@@ -95,34 +97,36 @@ class MessageAuthor extends \Magento\Framework\DataObject
      */
     private function _init(): void
     {
-        $this->_data['type'] = $this->userContext->getUserType() ?? UserContextInterface::USER_TYPE_GUEST;
+        $this->setType($this->userContext->getUserType() ?? UserContextInterface::USER_TYPE_GUEST);
 
         switch ($this->_data['type']) {
             case UserContextInterface::USER_TYPE_ADMIN:
                 /** @var \Magento\User\Model\User $user */
                 $user = $this->backendSession->getUser();
                 if ($user instanceof User) {
-                    $this->_data['id'] = (int)$user->getId();
-                    $this->_data['name'] = $user->getName();
-                    $this->_data['hash'] = $this->request->getParam('chat_hash', null);
+                    $this->setId((int) $user->getId())
+                        ->setName($user->getName())
+                        ->setHash($this->request->getParam('chat_hash', null));
                 }
                 break;
             case UserContextInterface::USER_TYPE_CUSTOMER:
                 $customer = $this->customerSession->getCustomer();
-                $this->_data['id'] = (int)$customer->getId();
-                $this->_data['name'] = $customer->getName();
-                $this->_data['hash'] = $this->chatMessageCollection
+                $chatHash = $this->chatMessageCollection->create()
                     ->addAuthorIdFilter($this->_getData('id'))
                     ->addAuthorTypeFilter($this->_getData('type'))
                     ->setPageSize(1)
-                    ->getLastItem()
-                    ->getData('chatHash');
+                    ->getFirstItem()
+                    ->getData('chat_hash') ?? $this->sessionManager->getSessionId();
+
+                $this->setId((int) $customer->getId())
+                    ->setName($customer->getName())
+                    ->setHash($chatHash);
                 break;
             case UserContextInterface::USER_TYPE_GUEST:
             default:
-                $this->_data['id'] = 0;
-                $this->_data['name'] = 'Quest #' . microtime(true);
-                $this->_data['hash'] = $this->sessionManager->getSessionId();
+                $this->setId(0)
+                    ->setName('Quest #' . microtime(true))
+                    ->setHash($this->sessionManager->getSessionId());
                 break;
         }
     }

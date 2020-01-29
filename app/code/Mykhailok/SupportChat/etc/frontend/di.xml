@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Mykhailok\SupportChat\Controller\Message\Save">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Mykhailok\SupportChat\Model\MessageAuthor">
+        <arguments>
+            <argument name="backendSession" xsi:type="object">Magento\Backend\Model\Auth\Session\Proxy</argument>
+        </arguments>
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+        <arguments>
+            <argument name="sessionManager" xsi:type="object">Magento\Framework\Session\SessionManager\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Customer\CustomerData\SectionPoolInterface">
+        <arguments>
+            <argument name="sectionSourceMap" xsi:type="array">
+                <item name="support-chat" xsi:type="string">Mykhailok\SupportChat\CustomerData\SupportChat</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
