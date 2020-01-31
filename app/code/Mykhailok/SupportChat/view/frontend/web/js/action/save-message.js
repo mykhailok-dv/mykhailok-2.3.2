@@ -7,7 +7,7 @@ define([
      * @param {Object} data
      * @param {String} url
      */
-    return function (data, url, self) {
+    return function (data, url) {
         return $.ajax({
             url: url,
             data: data,
