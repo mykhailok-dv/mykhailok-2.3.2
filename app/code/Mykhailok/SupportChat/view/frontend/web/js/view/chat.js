@@ -2,7 +2,7 @@ define([
     'jquery',
     'ko',
     'uiComponent',
-    'mykhailokSupportChatModelMessage',
+    'mykhailokSupportChatModelChat',
     'mykhailokSupportChatActionSave'
 ], function ($, ko, Component, messageModel, saveMessage) {
     'use strict';
