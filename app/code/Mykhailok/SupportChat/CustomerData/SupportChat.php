@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\CustomerData;
 
+use Magento\Authorization\Model\UserContextInterface;
 use Magento\Customer\CustomerData\SectionSourceInterface;
-use Magento\Framework\Data\Collection;
+use Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection;
+use Mykhailok\SupportChat\Model\ChatMessage;
 
 class SupportChat implements SectionSourceInterface
 {
@@ -19,11 +21,6 @@ class SupportChat implements SectionSourceInterface
     private $chatCollectionFactory;
 
     /**
-     * @var \Mykhailok\SupportChat\Service\ResponseData
-     */
-    private $responseData;
-
-    /**
      * @var \Mykhailok\SupportChat\Model\MessageAuthor
      */
     private $messageAuthor;
@@ -33,16 +30,19 @@ class SupportChat implements SectionSourceInterface
      */
     private $request;
 
+    /**
+     * @var array
+     */
+    private $responseData = [];
+
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatCollectionFactory,
-        \Mykhailok\SupportChat\Service\ResponseData $responseData,
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
         \Magento\Framework\App\RequestInterface $request
     ) {
         $this->logger = $logger;
         $this->chatCollectionFactory = $chatCollectionFactory;
-        $this->responseData = $responseData;
         $this->messageAuthor = $messageAuthor;
         $this->request = $request;
     }
@@ -62,12 +62,37 @@ class SupportChat implements SectionSourceInterface
                 ->addChatHashFilter($this->messageAuthor->getHash())
                 ->setPageSize($limit)
                 ->setOrder($chatCollection->getResource()->getIdFieldName(), Collection::SORT_ORDER_DESC);
-            $this->responseData->prepareResponseData($chatCollection);
+            $this->prepareResponseData($chatCollection);
 
         } catch (\Exception $exception) {
             $this->logger->critical($exception);
         }
 
-        return $this->responseData->getData();
+        return $this->responseData;
+    }
+
+    /**
+     * @param Collection $chatCollection
+     * @return void
+     */
+    private function prepareResponseData(Collection $chatCollection = null): void
+    {
+        if ($chatCollection === null) {
+            $this->responseData['messages'] = [];
+        } else {
+            /** @var ChatMessage $chat */
+            foreach ($chatCollection as $chat) {
+                if ($chat->getSupportChatMessageId()) {
+                    $this->responseData['messages'][$chat->getSupportChatMessageId()] = [
+                        'time' => $chat->getCreatedAt(),
+                        'text' => $chat->getMessage(),
+                        'authorName' => $chat->getAuthorName(),
+                        'authorType' => (int)$chat->getAuthorType() === UserContextInterface::USER_TYPE_ADMIN
+                            ? 'USER_TYPE_ADMIN'
+                            : 'USER_TYPE_USER',
+                    ];
+                }
+            }
+        }
     }
 }

@@ -21,16 +21,6 @@ define([
             },
 
             /** @inheritdoc */
-            success: function () {
-                self.messageValue('');
-            },
-
-            /** @inheritdoc */
-            error: function () {
-                self.hideChat();
-            },
-
-            /** @inheritdoc */
             complete: function () {
                 $('body').trigger('processStop');
             }

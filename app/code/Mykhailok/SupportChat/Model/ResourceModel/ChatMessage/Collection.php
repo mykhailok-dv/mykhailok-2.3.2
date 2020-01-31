@@ -5,7 +5,6 @@ namespace Mykhailok\SupportChat\Model\ResourceModel\ChatMessage;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Authorization\Model\UserContextInterface;
-use Magento\Framework\App\Cache;
 
 class Collection extends AbstractCollection
 {

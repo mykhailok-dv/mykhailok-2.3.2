@@ -31,11 +31,6 @@ class Save extends \Magento\Framework\App\Action\Action implements
     private $chatMessageResource;
 
     /**
-     * @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory
-     */
-    private $chatMessageCollectionFactory;
-
-    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
@@ -46,11 +41,6 @@ class Save extends \Magento\Framework\App\Action\Action implements
     private $requestValidate;
 
     /**
-     * @var ResponseData
-     */
-    private $responseData;
-
-    /**
      * @var \Psr\Log\LoggerInterface
      */
     private $logger;
@@ -59,10 +49,8 @@ class Save extends \Magento\Framework\App\Action\Action implements
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessageFactory $chatMessageResourceFactory,
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Mykhailok\SupportChat\Service\RequestValidate $requestValidate,
-        \Mykhailok\SupportChat\Service\ResponseData $responseData,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Psr\Log\LoggerInterface $logger,
         Context $context
@@ -71,10 +59,8 @@ class Save extends \Magento\Framework\App\Action\Action implements
         $this->chatMessageFactory = $chatMessageFactory;
         $this->messageUserDataProviderFactory = $messageUserDataProviderFactory;
         $this->chatMessageResource = $chatMessageResourceFactory->create();
-        $this->chatMessageCollectionFactory = $chatMessageCollectionFactory;
         $this->storeManager = $storeManager;
         $this->requestValidate = $requestValidate;
-        $this->responseData = $responseData;
         $this->messageManager = $messageManager;
         $this->logger = $logger;
     }
@@ -101,28 +87,16 @@ class Save extends \Magento\Framework\App\Action\Action implements
             /** @TODO: Method is temporary. Should by deleted when will be admin form functional. */
             $this->emulatorAdminAnswer($chatMessage->getChatHash());
 
-            /** Load all unread messages. */
-            $previousMessage = $chatMessage->getPreviousMessage();
-            $unreadMessages = null;
-            if ($previousMessage !== null) {
-                $unreadMessages = $this->chatMessageCollectionFactory->create();
-                if ($previousMessage->getId() === null) {
-                    $unreadMessages->addItem($chatMessage);
-                } else {
-                    $fromDatetime = new \DateTime($previousMessage->getCreatedAt());
-                    $unreadMessages->addCreatedAtRangeFilter($fromDatetime);
-                }
-            }
-            $this->responseData->prepareResponseData($unreadMessages);
         } catch (LocalizedException $localizedException) {
             $this->messageManager->addErrorMessage($localizedException->getMessage());
             $result->setHttpResponseCode($localizedException->getCode());
         } catch (\Exception $exception) {
             $this->logger->critical($exception);
             $this->messageManager->addErrorMessage(__('Unable to connect to the store support team.'));
+            $result->setHttpResponseCode(400);
         }
 
-        return $result->setData($this->responseData->getData());
+        return $result->setData(['messages' => []]);
     }
 
     /**

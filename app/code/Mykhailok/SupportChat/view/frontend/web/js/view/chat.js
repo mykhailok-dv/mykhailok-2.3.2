@@ -37,13 +37,20 @@ define([
          * Form has bind data-bind="click".
          */
         saveMessage: function () {
-            var data = {
+            var self = this,
+            data = {
                 message: this.messageValue(),
                 'form_key': $.mage.cookies.get('form_key'),
                 isAjax: 1
             };
 
-            saveMessage(data, this.action, this);
+            saveMessage(data, this.action, this)
+                .done(function () {
+                    self.messageValue('');
+                }, self)
+                .fail(function () {
+                    self.hideChat();
+                }, self);
         },
 
         /**
