@@ -21,11 +21,6 @@ use Magento\User\Model\User;
 class MessageAuthor extends \Magento\Framework\DataObject
 {
     /**
-     * @var UserContextInterface
-     */
-    private $userContext;
-
-    /**
      * @var \Magento\Backend\Model\Auth\Session
      */
     private $backendSession;
@@ -52,7 +47,6 @@ class MessageAuthor extends \Magento\Framework\DataObject
 
     /**
      * MessageAuthor constructor.
-     * @param UserContextInterface $userContext
      * @param \Magento\Backend\Model\Auth\Session $backendSession
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\App\RequestInterface $request
@@ -61,7 +55,6 @@ class MessageAuthor extends \Magento\Framework\DataObject
      * @param array $data
      */
     public function __construct(
-        \Magento\Authorization\Model\UserContextInterface $userContext,
         \Magento\Backend\Model\Auth\Session $backendSession,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\App\RequestInterface $request,
@@ -70,7 +63,6 @@ class MessageAuthor extends \Magento\Framework\DataObject
         array $data = []
     ) {
         parent::__construct($data);
-        $this->userContext = $userContext;
         $this->backendSession = $backendSession;
         $this->customerSession = $customerSession;
         $this->request = $request;
@@ -95,7 +87,7 @@ class MessageAuthor extends \Magento\Framework\DataObject
      */
     private function _init(): void
     {
-        $this->_data['type'] = $this->userContext->getUserType() ?? UserContextInterface::USER_TYPE_GUEST;
+        $this->setType($this->getUserType());
 
         switch ($this->_data['type']) {
             case UserContextInterface::USER_TYPE_ADMIN:
@@ -113,7 +105,7 @@ class MessageAuthor extends \Magento\Framework\DataObject
                 $this->_data['name'] = $customer->getName();
                 $this->_data['hash'] = $this->chatMessageCollection
                     ->addAuthorIdFilter($this->_getData('id'))
-                    ->addAuthorTypeFilter($this->_getData('type'))
+                    ->addAuthorTypeFilter((int)$this->_getData('type'))
                     ->setPageSize(1)
                     ->getLastItem()
                     ->getData('chatHash');
@@ -125,5 +117,27 @@ class MessageAuthor extends \Magento\Framework\DataObject
                 $this->_data['hash'] = $this->sessionManager->getSessionId();
                 break;
         }
+    }
+
+    public function setQuestHash(string $chatHash): void
+    {
+        $this->setData('questHash', $chatHash);
+    }
+
+    public function getQuestHash(): string
+    {
+        return (string)$this->getData('questHash');
+    }
+
+    public function getUserType(): int
+    {
+        if (($user = $this->backendSession->getUser()) && $user instanceof User) {
+            return UserContextInterface::USER_TYPE_ADMIN;
+        }
+        if ($user = $this->customerSession->getCustomerId()) {
+            return UserContextInterface::USER_TYPE_CUSTOMER;
+        }
+
+        return UserContextInterface::USER_TYPE_GUEST;
     }
 }
