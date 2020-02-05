@@ -28,12 +28,12 @@
                 name="author_name"
                 length="255"
                 nullable="true"
-                comment="Author name"
+                comment="Author Name"
         />
         <column xsi:type="text"
                 name="message"
                 nullable="false"
-                comment="Message text"
+                comment="Message Text"
         />
         <column xsi:type="smallint"
                 name="website_id"
@@ -47,7 +47,7 @@
                 name="chat_hash"
                 length="255"
                 nullable="false"
-                comment="Chat hash"
+                comment="Chat Hash"
         />
         <column xsi:type="timestamp"
                 name="created_at"

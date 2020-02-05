@@ -38,7 +38,7 @@ class SupportChat implements SectionSourceInterface
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatCollectionFactory,
-        \Mykhailok\SupportChat\Model\MessageAuthor\Interceptor $messageAuthor,
+        \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
         \Magento\Framework\App\RequestInterface $request
     ) {
         $this->logger = $logger;

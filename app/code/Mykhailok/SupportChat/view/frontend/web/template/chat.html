@@ -1,0 +1,50 @@
+<div id="mykhailok-support-chat" data-bind="afterRender: initModal">
+    <div id="mykhailok-support-chat-messages">
+        <ul class="messages" data-bind="foreach: messages">
+            <li class="item" data-bind="css: { left: isAdmin, right: !isAdmin }">
+                <div class="item-time" data-bind="text: time"></div>
+                <div class="item-name" data-bind="text: name"></div>
+                <div class="item-message" data-bind="text: text"></div>
+            </li>
+        </ul>
+    </div>
+    <div id="mykhailok-support-chat-form" class="form-wrapper">
+        <form class="form"
+              id="support-chat-form"
+              action="javascript:void(0);"
+              method="post"
+              data-mage-init='
+              {
+                  "validation": {}
+              }'
+              data-bind="submit: saveMessage"
+        >
+            <div class="field textarea required">
+                <label class="label" for="message">
+                    <span translate="'Message'"></span>
+                </label>
+                <div class="control">
+                    <textarea data-bind="value: messageValue, attr: { title: $t('Your message') }"
+                              id="message"
+                              type="text"
+                              data-validate="{required:true}"
+                              required
+                              rows="2"></textarea>
+                </div>
+            </div>
+            <div class="actions-toolbar form-buttons">
+                <div class="close">
+                    <button type="button" data-bind="click: hideChat">
+                        <span translate="'Close'"></span>
+                    </button>
+                </div>
+                <div class="primary">
+                    <input type="hidden" name="hideit" id="hideit" value=""/>
+                    <button data-bind="attr: { title: $t('Save') }" type="submit" class="action submit primary">
+                        <span translate="'Save'"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
