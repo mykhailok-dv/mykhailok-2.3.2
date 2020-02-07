@@ -246,6 +246,7 @@ return [
         'Mykhailok_Catalog' => 1,
         'Mykhailok_Cms' => 1,
         'Mykhailok_ControllerDemo' => 1,
+        'Mykhailok_CustomerLogin' => 1,
         'Mykhailok_SupportChat' => 1,
         'Temando_Shipping' => 1,
         'Vertex_Tax' => 1,
