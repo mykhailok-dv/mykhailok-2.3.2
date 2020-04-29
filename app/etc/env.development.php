@@ -27,7 +27,7 @@ return [
         ]
     ],
     'x-frame-options' => 'SAMEORIGIN',
-    'MAGE_MODE' => 'developer',
+    'MAGE_MODE' => 'default',
     'session' => [
         'save' => 'files'
     ],

@@ -58,9 +58,13 @@ atlassian*
 /pub/media/captcha/*
 /pub/static/*
 !/pub/static/.htaccess
+app/etc/env.php
 
 /var/*
 !/var/.htaccess
+!/var/log
+/var/log/*
+!/var/log/.gitkeep
 !/var/db.sql.gz
 /vendor/*
 !/vendor/.htaccess
