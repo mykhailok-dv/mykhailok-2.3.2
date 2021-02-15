@@ -69,6 +69,7 @@ app/etc/env.php
 !/var/log
 /var/log/*
 !/var/log/.gitkeep
+!/var/shell
 !/var/db.sql.gz
 /vendor/*
 !/vendor/.htaccess
