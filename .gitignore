@@ -13,6 +13,10 @@ atlassian*
 /pub/sitemap
 /pub/sitemap.xml
 /.idea
+/.editorconfig
+/.git
+.github
+/auth.json
 /.gitattributes
 /app/config_sandbox
 /app/code/Magento/TestModule*
@@ -65,6 +69,7 @@ app/etc/env.php
 !/var/log
 /var/log/*
 !/var/log/.gitkeep
+!/var/shell
 !/var/db.sql.gz
 /vendor/*
 !/vendor/.htaccess

@@ -1,55 +1,114 @@
 # SSL certificates for development
-# $ mkcert mykhailokhrypko.local www.mykhailokhrypko.local mykhailokhrypko-additional.local www.mykhailokhrypko-additional.local
+# $ mkcert -cert-file=mykhailokhrypko.local+3.pem -key-file=mykhailokhrypko.local+3-key.pem mykhailokhrypko.local www.mykhailokhrypko.local mykhailokhrypko-additional.local www.mykhailokhrypko-additional.local
 #
-# DEVELOPMENT:
-# $ docker-compose -f docker-compose.yml -f docker-compose-dev.yml up -d
-#
-# PRODUCTION:
+# Start composition:
 # $ docker-compose up -d
 #
-# MacOS (development only)
-# docker-sync-stack start
+# For MacOS users (development only)
+# $ docker-sync-stack start
 version: '3.7'
 services:
   php-apache:
     container_name: mykhailokhrypko.local
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-      args:
-        # needed for the build stage
-        # Install memcached inside container if needed. Better to use external Memcached container and only have
-        # php extension to connect to it
-        - MEMCACHED=0
+    # EXECUTION_ENVIRONMENT - 'development' or 'production'
+    image: defaultvalue/php:7.4-${EXECUTION_ENVIRONMENT}
+    # In case you need your own Dockerfile. Dockerfile example:
+    # ARG EXECUTION_ENVIRONMENT
+    # FROM defaultvalue/php:7.3-${EXECUTION_ENVIRONMENT}
+#    build:
+#      context: .
+#      dockerfile: docker/Dockerfile
+#      args:
+#        - EXECUTION_ENVIRONMENT=${EXECUTION_ENVIRONMENT}
+    user: docker:docker
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.frontend.rule=Host:mykhailokhrypko.local,www.mykhailokhrypko.local,mykhailokhrypko-additional.local,www.mykhailokhrypko-additional.local
-      - traefik.http.frontend.entryPoints=http
-      - traefik.https.frontend.rule=Host:mykhailokhrypko.local,www.mykhailokhrypko.local,mykhailokhrypko-additional.local,www.mykhailokhrypko-additional.local
-      - traefik.https.frontend.entryPoints=https
-      - traefik.https.protocol=https
-      - traefik.https.port=443
+      # HTTP
+      - traefik.http.routers.mykhailokhrypko-local-http.rule=Host(`mykhailokhrypko.local`,`www.mykhailokhrypko.local`,`mykhailokhrypko-additional.local`,`www.mykhailokhrypko-additional.local`)
+      - traefik.http.routers.mykhailokhrypko-local-http.entrypoints=http
+      - traefik.http.routers.mykhailokhrypko-local-http.service=mykhailokhrypko-local-http
+      - traefik.http.services.mykhailokhrypko-local-http.loadbalancer.server.port=80
+      - traefik.http.services.mykhailokhrypko-local-http.loadbalancer.server.scheme=http
+      # HTTPS
+      - traefik.http.routers.mykhailokhrypko-local-https.rule=Host(`mykhailokhrypko.local`,`www.mykhailokhrypko.local`,`mykhailokhrypko-additional.local`,`www.mykhailokhrypko-additional.local`)
+      - traefik.http.routers.mykhailokhrypko-local-https.entrypoints=https
+      - traefik.http.routers.mykhailokhrypko-local-https.tls=true
+      - traefik.http.routers.mykhailokhrypko-local-https.service=mykhailokhrypko-local-https
+      - traefik.http.services.mykhailokhrypko-local-https.loadbalancer.server.port=443
+      - traefik.http.services.mykhailokhrypko-local-https.loadbalancer.server.scheme=https
+      # Develop with extension that allows setting livereload host and port - https://github.com/lokcito/livereload-extensions
+      - traefik.http.routers.mykhailokhrypko-local-livereload-https.rule=Host(`mykhailokhrypko.local`,`www.mykhailokhrypko.local`,`mykhailokhrypko-additional.local`,`www.mykhailokhrypko-additional.local`)
+      - traefik.http.routers.mykhailokhrypko-local-livereload-https.entrypoints=livereload-https
+      - traefik.http.routers.mykhailokhrypko-local-livereload-https.tls=true
+      - traefik.http.routers.mykhailokhrypko-local-livereload-https.service=mykhailokhrypko-local-livereload-https
+      - traefik.http.services.mykhailokhrypko-local-livereload-https.loadbalancer.server.port=35729
+      - traefik.http.services.mykhailokhrypko-local-livereload-https.loadbalancer.server.scheme=http
+      - traefik.http.routers.mykhailokhrypko-local-livereload-http.rule=Host(`mykhailokhrypko.local`,`www.mykhailokhrypko.local`,`mykhailokhrypko-additional.local`,`www.mykhailokhrypko-additional.local`)
+      - traefik.http.routers.mykhailokhrypko-local-livereload-http.entrypoints=livereload-http
+      - traefik.http.routers.mykhailokhrypko-local-livereload-http.service=mykhailokhrypko-local-livereload-http
+      - traefik.http.services.mykhailokhrypko-local-livereload-http.loadbalancer.server.port=35729
+      - traefik.http.services.mykhailokhrypko-local-livereload-http.loadbalancer.server.scheme=http
     # Must add extra_hosts to be written to /etc/hosts - otherwise containerized application can not curl itself
     extra_hosts:
       - "mykhailokhrypko.local www.mykhailokhrypko.local mykhailokhrypko-additional.local www.mykhailokhrypko-additional.local:127.0.0.1"
-#    links:
+      # Required for xDebug on Linux hosts till docker.host.internal is not available by default - https://github.com/docker/libnetwork/pull/2348/files
+      - "host.docker.internal:172.17.0.1"
+    links:
 #      - memcached
+#      - redis
+      - elasticsearch
     external_links:
       - mysql57:mysql
-#    networks:
-#      - reverse-proxy
+      - mailhog
     network_mode: bridge
+    environment:
+      # Must be set to some of the domains for xdebug to work. Should have server configured in
+      # Preferences > Language and Frameworks > PHP > Servers
+      # Or just run the project with the same domain and debug enabled in the browser
+      - PHP_IDE_CONFIG=serverName=mykhailokhrypko.local
+      # Go is required to catch emails with Mailhog and mhsendmail (Sendmail replacement)
+      - ADDITIONAL_PATH=/usr/local/go/bin
     volumes:
       - .:/var/www/html
-      - /misc/share/ssl:/certs
+      - ${SSL_CERTIFICATES_DIR}:/certs
       - ./docker/virtual-host.conf:/etc/apache2/sites-enabled/virtual-host.conf
+      # IMPORTANT! The below configuration is for Mac only to enable Docker Sync Stack. Don't commit!
+      #- mykhailokhrypko-local-sync:/var/www/html:nocopy
+
+# IMPORTANT! The below volumes configuration is for Mac only to enable Docker Sync Stack. Don't commit!
+#volumes:
+#  mykhailokhrypko-local-sync:
+#    external: true
+
+#  redis:
+#    image: redis:latest
+#    network_mode: bridge
+#    labels:
+#      - traefik.enable=false
+#    restart: always
 
 #  memcached:
 #    image: 'memcached:1.5'
 #    network_mode: bridge
+#    labels:
+#      - traefik.enable=false
 #    restart: always
 
-#networks:
-#  reverse-proxy:
-#    external: true
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    environment:
+      - network.host=0.0.0.0
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - xpack.security.enabled=false
+      - indices.query.bool.max_clause_count=10240
+      - ES_JAVA_OPTS=-Xms1024m -Xmx1024m
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    restart: always
+    network_mode: bridge

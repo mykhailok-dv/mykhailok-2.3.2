@@ -1,41 +1,10 @@
-############################################
-## overrides deployment configuration mode value
-## use command bin/magento deploy:mode:set to switch modes
-
-#   SetEnv MAGE_MODE developer
-
-############################################
-## uncomment these lines for CGI mode
-## make sure to specify the correct cgi php binary file name
-## it might be /cgi-bin/php-cgi
-
-#    Action php5-cgi /cgi-bin/php5-cgi
-#    AddHandler php5-cgi .php
-
-############################################
-## GoDaddy specific options
-
-#   Options -MultiViews
-
-## you might also need to add this line to php.ini
-##     cgi.fix_pathinfo = 1
-## if it still doesn't work, rename php.ini to php5.ini
-
-############################################
-## this line is specific for 1and1 hosting
-
-    #AddType x-mapp-php5 .php
-    #AddHandler x-mapp-php5 .php
-
-############################################
-## enable usage of methods arguments in backtrace
-
-    SetEnv MAGE_DEBUG_SHOW_ARGS 1
-
-############################################
-## default index file
-
-    DirectoryIndex index.php
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !^/pub/
+RewriteCond %{REQUEST_URI} !^/setup/
+RewriteCond %{REQUEST_URI} !^/update/
+RewriteCond %{REQUEST_URI} !^/dev/
+RewriteRule .* /pub/$0 [L]
+DirectoryIndex index.php
 
 <IfModule mod_php5.c>
 ############################################
