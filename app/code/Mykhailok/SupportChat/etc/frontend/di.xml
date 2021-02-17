@@ -19,7 +19,15 @@
             </argument>
         </arguments>
     </type>
-    <type name="Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection">
-        <plugin name="chatMessageCollectionLoad" type="Mykhailok\SupportChat\Plugin\Model\ResourceModel\ChatMessage\Collection" />
+
+    <type name="Mykhailok\SupportChat\Observer\CustomerLogin">
+        <arguments>
+            <argument name="sessionManager" xsi:type="object">Magento\Framework\Session\SessionManager\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Mykhailok\SupportChat\Observer\CustomerPredispatch">
+        <arguments>
+            <argument name="sessionManager" xsi:type="object">Magento\Framework\Session\SessionManager\Proxy</argument>
+        </arguments>
     </type>
 </config>

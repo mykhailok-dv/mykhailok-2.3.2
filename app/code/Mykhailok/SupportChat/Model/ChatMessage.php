@@ -3,13 +3,11 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Model;
 
-use Magento\Authorization\Model\UserContextInterface;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Model\AbstractModel;
-use Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection;
-
 /**
- * @method int getSupportChatMessageId()
+ * @method int getId()
+ * @method $this setId(int $Id)
+ * @method int getChatId()
+ * @method $this setChatId(int $chatId)
  * @method int getAuthorType()
  * @method $this setAuthorType(int $authorType)
  * @method int getAuthorId()
@@ -18,25 +16,24 @@ use Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection;
  * @method $this setAuthorName(string $authorName)
  * @method string getMessage()
  * @method $this setMessage(string $message)
- * @method int getWebsiteId()
- * @method $this setWebsiteId(int $websiteId)
- * @method string getChatHash()
- * @method $this setChatHash(string $chatHash)
  * @method \Datetime getCreatedAt()
  * @method $this setCreatedAt(\Datetime $datetime)
  */
-class ChatMessage extends AbstractModel
+class ChatMessage extends \Magento\Framework\Model\AbstractModel
 {
-    /**
-     * @var Collection
-     */
-    private $chatMessageCollection;
+    private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatMessageCollection;
+    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
 
     /**
-     * @var MessageAuthor
+     * ChatMessage constructor.
+     * @param ResourceModel\ChatMessage\Collection $chatMessageCollection
+     * @param MessageAuthor $messageAuthor
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
      */
-    private $messageAuthor;
-
     public function __construct(
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatMessageCollection,
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
@@ -46,10 +43,20 @@ class ChatMessage extends AbstractModel
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-        parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        parent::__construct(
+            $context,
+            $registry,
+            $resource,
+            $resourceCollection,
+            $data
+        );
         $this->chatMessageCollection = $chatMessageCollection;
         $this->messageAuthor = $messageAuthor;
     }
+
+    /**
+     * @inheirtDoc
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -57,13 +64,8 @@ class ChatMessage extends AbstractModel
     }
 
     /**
-     * @var self
-     */
-    private $lastMessage;
-
-    /**
      * @inheritDoc
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function beforeSave()
     {
@@ -75,43 +77,12 @@ class ChatMessage extends AbstractModel
     }
 
     /**
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function validate(): void
     {
         if (empty($this->getMessage())) {
-            throw new LocalizedException(__('You don\'t ask your question.'));
+            throw new \Magento\Framework\Exception\LocalizedException(__('You don\'t ask your question.'));
         }
-    }
-
-    /**
-     * @return $this|null
-     */
-    public function getPreviousMessage(): ?self
-    {
-        if ($this->lastMessage === null) {
-            $this->loadPreviousMessage();
-        }
-
-        return $this->lastMessage;
-    }
-
-    /**
-     * @return void
-     */
-    private function loadPreviousMessage(): void
-    {
-        if ($this->messageAuthor->getType() === UserContextInterface::USER_TYPE_GUEST) {
-            $this->chatMessageCollection
-                ->addChatHashFilter($this->getChatHash());
-        }
-
-        $this->chatMessageCollection
-            ->addAuthorIdFilter($this->messageAuthor->getId())
-            ->setPageSize(1)
-            ->addOrder('created_at');
-
-        $this->lastMessage = $this->chatMessageCollection
-            ->getLastItem();
     }
 }
