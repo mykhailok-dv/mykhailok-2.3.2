@@ -86,6 +86,15 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
+     * @param $authorId
+     * @return $this
+     */
+    public function addChatIdFilter($authorId): self
+    {
+        return $this->addFieldToFilter('chat_id', $authorId);
+    }
+
+    /**
      * @param $chatHash
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException

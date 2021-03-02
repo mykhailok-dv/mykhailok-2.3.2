@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="my_chat_dataprovider_searchresult_load_before">
+        <observer name="myGridChatCollection" instance="Mykhailok\SupportChat\Observer\Grid\ChatCollection" />
+    </event>
+    <event name="my_chatmessage_dataprovider_searchresult_load_before">
+        <observer name="myGridChatMessageCollection" instance="Mykhailok\SupportChat\Observer\Grid\ChatMessageCollection" />
+    </event>
+</config>

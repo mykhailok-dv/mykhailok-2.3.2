@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Mykhailok_SupportChat::support_chat"
+             title="Support Chat"
+             module="Mykhailok_SupportChat"
+             sortOrder="50"
+             parent="Magento_Customer::customer"
+             resource="Mykhailok_SupportChat::chat_listing"
+        />
+        <add id="Mykhailok_SupportChat::chat_listing"
+             title="Chat With Customers"
+             translate="title"
+             module="Mykhailok_SupportChat"
+             sortOrder="10"
+             parent="Mykhailok_SupportChat::support_chat"
+             action="my_chat/chat/index"
+             resource="DvCampus_CustomerPreferences::listing"
+        />
+    </menu>
+</config>
