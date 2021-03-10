@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class Index implements \Magento\Framework\App\ActionInterface
+class Index implements \Magento\Framework\App\ActionInterface,
+    \Magento\Framework\App\Action\HttpGetActionInterface
 {
     public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat-listing';
 

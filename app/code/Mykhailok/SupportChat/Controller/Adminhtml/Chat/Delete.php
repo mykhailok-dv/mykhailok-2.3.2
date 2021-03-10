@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class Delete implements \Magento\Framework\App\ActionInterface
+class Delete implements \Magento\Framework\App\ActionInterface,
+    \Magento\Framework\App\Action\HttpPostActionInterface
 {
     /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;

@@ -1,7 +1,7 @@
-Save,Save
-"Save & Duplicate","Save & Duplicate"
-"Save & Close","Save & Close"
+"Save","Save"
 "%1 chat(s) have been deleted.","%1 chat(s) have been deleted."
+"Please, select chat which should be deleted","Please, select chat which should be deleted"
+"%1 preference(s) have been deleted.","%1 preference(s) have been deleted."
 "You added answer","You added answer"
 "Unable to connect to the store support team.","Unable to connect to the store support team."
 "You don't ask your question.","You don't ask your question."
@@ -9,11 +9,11 @@ Save,Save
 "You have wrong form. Please, reload page.","You have wrong form. Please, reload page."
 "You aren't using ajax connection.","You aren't using ajax connection."
 "Open Chat","Open Chat"
-Delete,Delete
+"Delete","Delete"
 "Delete chat with %1","Delete chat with %1"
 "Are you sure you want to delete the chat with %1 customer?","Are you sure you want to delete the chat with %1 customer?"
-Message,Message
-Close,Close
+"Message","Message"
+"Close","Close"
 "Message to administrator","Message to administrator"
 "My Support Chat Section","My Support Chat Section"
 "Customer Chats","Customer Chats"
@@ -21,10 +21,11 @@ Close,Close
 "Are you sure you want to delete the selected chats?","Are you sure you want to delete the selected chats?"
 "Delete Chats","Delete Chats"
 "Last message from","Last message from"
-Website,Website
+"Website","Website"
 "Sent At","Sent At"
 "Count of messages","Count of messages"
-"message Information","message Information"
+"Message Information","Message Information"
+"Chat Details","Chat Details"
 "Your Message","Your Message"
 "Author Type","Author Type"
 "Author Name","Author Name"
