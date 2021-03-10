@@ -108,7 +108,7 @@ class DataSetup extends \Magento\Framework\Module\Setup implements ModuleDataSet
     }
 
     /**
-     * Delete table row
+     * MassDelete table row
      *
      * @param string $table
      * @param string $idField
