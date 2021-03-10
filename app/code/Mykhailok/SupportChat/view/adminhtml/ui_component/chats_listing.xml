@@ -16,7 +16,7 @@
         <settings>
             <storageConfig>
                 <param name="indexField" xsi:type="string">id</param>
-            </storageConfig>f
+            </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
         <aclResource>Mykhailok_SupportChat::chat-listing</aclResource>
@@ -41,11 +41,11 @@
                 <settings>
                     <confirm>
                         <message translate="true">Are you sure you want to delete the selected chats?</message>
-                        <title translate="true">Delete chat</title>
+                        <title translate="true">Delete Chats</title>
                     </confirm>
-                    <url path="my_chat/chat/delete"/>
+                    <url path="my_chat/chat/massdelete"/>
                     <type>delete</type>
-                    <label translate="true">Delete Chat</label>
+                    <label translate="true">Delete Chats</label>
                 </settings>
             </action>
         </massaction>
@@ -62,17 +62,12 @@
                 <indexField>id</indexField>
             </settings>
         </selectionsColumn>
-        <column name="author_type" sortOrder="10">
+        <column name="author_type" component="Magento_Ui/js/grid/columns/select" sortOrder="10">
             <settings>
                 <filter>select</filter>
-                <label translate="true">Author Type</label>
+                <label translate="true">Last message from</label>
                 <dataType>select</dataType>
-            </settings>
-        </column>
-        <column name="author_name" sortOrder="20">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Author Name</label>
+                <options class="Mykhailok\SupportChat\Model\Options\AuthorType"/>
             </settings>
         </column>
         <column name="message" sortOrder="30">
@@ -81,7 +76,7 @@
                 <label translate="true">Message</label>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Mykhailok\SupportChat\Ui\Component\Listing\Column\BlockActions" sortOrder="40">
+        <actionsColumn name="actions" class="Mykhailok\SupportChat\Ui\Component\Listing\Column\BlockActions" sortOrder="100">
             <settings>
                 <indexField>id</indexField>
             </settings>
@@ -98,7 +93,7 @@
             <settings>
                 <filter>dateRange</filter>
                 <dataType>date</dataType>
-                <label translate="true">Created At</label>
+                <label translate="true">Sent At</label>
             </settings>
         </column>
         <column name="message_count" sortOrder="70">

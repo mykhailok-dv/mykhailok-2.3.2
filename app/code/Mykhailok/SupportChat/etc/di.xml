@@ -20,4 +20,14 @@
             <argument name="resourceModel" xsi:type="string">Mykhailok\SupportChat\Model\ResourceModel\Chat</argument>
         </arguments>
     </type>
+    <virtualType name="Mykhailok\SupportChat\Model\Options\AuthorType"
+                 type="Mykhailok\SupportChat\Model\Options\AbstractOption">
+        <arguments>
+            <argument name="options" xsi:type="array">
+                <item name="2" xsi:type="string">Admin</item>
+                <item name="3" xsi:type="string">Customer</item>
+                <item name="4" xsi:type="string">Quest</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

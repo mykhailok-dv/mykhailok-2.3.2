@@ -5,13 +5,33 @@ namespace Mykhailok\SupportChat\Model\ChatMessages;
 
 class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
+    /** @var array $loadedData */
     private array $loadedData = [];
 
+    /** @var \Magento\Framework\App\RequestInterface $request */
+    private \Magento\Framework\App\RequestInterface $request;
+
+    /** @var \Magento\Backend\Model\Auth\Session $backendSession */
+    private \Magento\Backend\Model\Auth\Session $backendSession;
+
+    /**
+     * DataProvider constructor.
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory
+     * @param \Magento\Backend\Model\Auth\Session $backendSession
+     * @param string $name
+     * @param string $primaryFieldName
+     * @param string $requestFieldName
+     * @param array $meta
+     * @param array $data
+     */
     public function __construct(
+        \Magento\Framework\App\RequestInterface $request,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory,
-        $name,
-        $primaryFieldName,
-        $requestFieldName,
+        \Magento\Backend\Model\Auth\Session $backendSession,
+        string $name,
+        string $primaryFieldName,
+        string $requestFieldName,
         array $meta = [],
         array $data = []
     ) {
@@ -22,7 +42,9 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
             $meta,
             $data
         );
+        $this->request = $request;
         $this->collection = $chatMessageCollectionFactory->create();
+        $this->backendSession = $backendSession;
     }
 
     /**
@@ -38,6 +60,22 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
             /** @var \Mykhailok\SupportChat\Model\ChatMessage $item */
             foreach ($items as $item) {
                 $this->loadedData[$item->getId()] = $item->getData();
+            }
+        } else {
+            $user = $this->backendSession->getUser();
+
+            if ($user instanceof \Magento\User\Model\User) {
+                $authorId = $user->getId();
+                $authorType = \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN;
+                $authorName = $user->getName();
+                $chatId = $this->request->getParam('chat_id');
+
+                $this->loadedData[$chatId] = [
+                    'author_id' => $authorId,
+                    'author_type' => $authorType,
+                    'author_name' => $authorName,
+                    'chat_id' => $chatId,
+                ];
             }
         }
 

@@ -6,6 +6,8 @@ namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 class Details implements \Magento\Framework\App\ActionInterface
 {
     public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat-listing';
+
+    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
     private \Magento\Framework\Controller\ResultFactory $resultFactory;
 
     /**
@@ -18,7 +20,10 @@ class Details implements \Magento\Framework\App\ActionInterface
         $this->resultFactory = $resultFactory;
     }
 
-    public function execute()
+    /**
+     * @return \Magento\Framework\Controller\ResultInterface
+     */
+    public function execute(): \Magento\Framework\Controller\ResultInterface
     {
         return $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_PAGE);
     }

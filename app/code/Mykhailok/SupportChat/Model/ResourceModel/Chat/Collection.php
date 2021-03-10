@@ -5,8 +5,8 @@ namespace Mykhailok\SupportChat\Model\ResourceModel\Chat;
 
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
+    /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
     private \Magento\Store\Model\StoreManagerInterface $storeManager;
-    private \Mykhailok\SupportChat\Model\ResourceModel\Chat $chatResourceModel;
 
     /**
      * Collection constructor.
@@ -15,7 +15,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat $chatResourceModel
      * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
      * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
      */
@@ -25,7 +24,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Mykhailok\SupportChat\Model\ResourceModel\Chat $chatResourceModel,
         \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
         \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     ) {
@@ -38,7 +36,6 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             $resource
         );
         $this->storeManager = $storeManager;
-        $this->chatResourceModel = $chatResourceModel;
     }
 
     /**
@@ -55,7 +52,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
 
     /**
      * @param int $websiteId
-     * @return \Mykhailok\SupportChat\Model\ResourceModel\Chat\Collection
+     * @return $this
      */
     public function addWebsiteFilter(int $websiteId): self
     {
@@ -63,12 +60,21 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
-     * @param $chatHash
+     * @param string $chatHash
      * @return $this
      */
-    public function addHashFilter($chatHash): self
+    public function addHashFilter(string $chatHash): self
     {
         return $this->addFieldToFilter('hash', $chatHash);
+    }
+
+    /**
+     * @param int $chatId
+     * @return $this
+     */
+    public function addChatIdFilter(int $chatId): self
+    {
+        return $this->addFieldToFilter('id', $chatId);
     }
 
     /**

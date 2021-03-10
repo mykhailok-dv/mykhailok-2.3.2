@@ -5,13 +5,32 @@ namespace Mykhailok\SupportChat\CustomerData;
 
 class SupportChat implements \Magento\Customer\CustomerData\SectionSourceInterface
 {
-    private \Psr\Log\LoggerInterface $logger;
-    private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
-    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
-    private \Magento\Framework\App\RequestInterface $request;
+    /** @var array */
     private array $responseData = [];
+
+    /** @var \Psr\Log\LoggerInterface $logger */
+    private \Psr\Log\LoggerInterface $logger;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
+    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
+
+    /** @var \Magento\Framework\App\RequestInterface $request */
+    private \Magento\Framework\App\RequestInterface $request;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory;
 
+    /**
+     * SupportChat constructor.
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory
+     * @param \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
+     * @param \Magento\Framework\App\RequestInterface $request
+     */
     public function __construct(
         \Psr\Log\LoggerInterface $logger,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
@@ -46,7 +65,6 @@ class SupportChat implements \Magento\Customer\CustomerData\SectionSourceInterfa
                     \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection::SORT_ORDER_DESC
                 );
             $this->prepareResponseData($chatMessageCollection);
-
         } catch (\Exception $exception) {
             $this->logger->critical($exception);
         }
@@ -55,27 +73,23 @@ class SupportChat implements \Magento\Customer\CustomerData\SectionSourceInterfa
     }
 
     /**
-     * @param ?\Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatCollection
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatCollection
      */
     private function prepareResponseData(
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatCollection = null
+        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatCollection
     ): void {
-        if ($chatCollection === null) {
-            $this->responseData['messages'] = [];
-        } else {
-            /** @var \Mykhailok\SupportChat\Model\ChatMessage $chat */
-            foreach ($chatCollection as $chat) {
-                if ($chat->getId()) {
-                    $this->responseData['messages'][$chat->getId()] = [
-                        'time' => $chat->getCreatedAt(),
-                        'text' => $chat->getMessage(),
-                        'authorName' => $chat->getAuthorName(),
-                        'authorType' => (int)$chat->getAuthorType() ===
-                        \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN
-                            ? 'USER_TYPE_ADMIN'
-                            : 'USER_TYPE_USER',
-                    ];
-                }
+        /** @var \Mykhailok\SupportChat\Model\ChatMessage $chat */
+        foreach ($chatCollection as $chat) {
+            if ($chat->getId()) {
+                $this->responseData['messages'][$chat->getId()] = [
+                    'time' => $chat->getCreatedAt(),
+                    'text' => $chat->getMessage(),
+                    'authorName' => $chat->getAuthorName(),
+                    'authorType' => (int)$chat->getAuthorType() ===
+                    \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN
+                        ? 'USER_TYPE_ADMIN'
+                        : 'USER_TYPE_USER',
+                ];
             }
         }
     }

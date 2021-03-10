@@ -5,33 +5,31 @@ namespace Mykhailok\SupportChat\Model;
 
 class MessageUserDataProvider
 {
-    protected ?\Mykhailok\SupportChat\Model\Chat $chatModel;
+    /** @var Chat  */
+    protected \Mykhailok\SupportChat\Model\Chat $chatModel;
 
-    private ChatFactory $chatFactory;
-    private ChatMessageFactory $chatMessageFactory;
-    private ResourceModel\Chat $resourceModelChat;
-    private ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
-    private MessageAuthor $messageAuthor;
+    /** @var \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory */
+    private \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat*/
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
+    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
+
+    /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
     private \Magento\Store\Model\StoreManagerInterface $storeManager;
 
-    /**
-     * MessageUserDataProvider constructor.
-     * @param ChatFactory $chatFactory
-     * @param ChatMessageFactory $chatMessageFactory
-     * @param ResourceModel\Chat $resourceModelChat
-     * @param ResourceModel\Chat\CollectionFactory $chatCollectionFactory
-     * @param MessageAuthor $messageAuthor
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     */
     public function __construct(
-        \Mykhailok\SupportChat\Model\ChatFactory $chatFactory,
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
-        $this->chatFactory = $chatFactory;
         $this->chatMessageFactory = $chatMessageFactory;
         $this->resourceModelChat = $resourceModelChat;
         $this->chatCollectionFactory = $chatCollectionFactory;

@@ -7,34 +7,48 @@ class Save implements
     \Magento\Framework\App\ActionInterface,
     \Magento\Framework\App\Action\HttpPostActionInterface
 {
-    private \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory;
+    /** @var \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory */
     private \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory;
-    private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessageFactory $chatMessageResourceFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage;
-    private \Magento\Store\Model\StoreManagerInterface $storeManager;
+
+    /** @var \Mykhailok\SupportChat\Service\RequestValidate $requestValidate */
     private \Mykhailok\SupportChat\Service\RequestValidate $requestValidate;
+
+    /** @var \Magento\Framework\Message\ManagerInterface $messageManager */
     private \Magento\Framework\Message\ManagerInterface $messageManager;
+
+    /** @var \Psr\Log\LoggerInterface $logger */
     private \Psr\Log\LoggerInterface $logger;
+
+    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
     private \Magento\Framework\Controller\ResultFactory $resultFactory;
+
+    /** @var \Magento\Framework\App\RequestInterface $request */
     private \Magento\Framework\App\RequestInterface $request;
 
+    /**
+     * Save constructor.
+     * @param \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage
+     * @param \Mykhailok\SupportChat\Service\RequestValidate $requestValidate
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
+     * @param \Magento\Framework\App\RequestInterface $request
+     */
     public function __construct(
-        \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory,
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessageFactory $chatMessageResourceFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Mykhailok\SupportChat\Service\RequestValidate $requestValidate,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
         \Magento\Framework\App\RequestInterface $request
     ) {
-        $this->chatMessageFactory = $chatMessageFactory;
         $this->messageUserDataProviderFactory = $messageUserDataProviderFactory;
-        $this->chatMessageResourceFactory = $chatMessageResourceFactory;
         $this->resourceModelChatMessage = $resourceModelChatMessage;
-        $this->storeManager = $storeManager;
         $this->requestValidate = $requestValidate;
         $this->messageManager = $messageManager;
         $this->logger = $logger;

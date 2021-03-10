@@ -5,6 +5,7 @@ namespace Mykhailok\SupportChat\Model\ResourceModel\ChatMessage;
 
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
 
     public function __construct(
@@ -27,6 +28,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         $this->resourceModelChat = $resourceModelChat;
     }
 
+    /** @var array  */
     private static array $authorTypes = [
         \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN,
         \Magento\Authorization\Model\UserContextInterface::USER_TYPE_CUSTOMER,

@@ -5,8 +5,13 @@ namespace Mykhailok\SupportChat\Observer\Grid;
 
 class ChatCollection implements \Magento\Framework\Event\ObserverInterface
 {
+    /** @var \Magento\Framework\App\ResourceConnection $resourceConnection */
     private \Magento\Framework\App\ResourceConnection $resourceConnection;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory;
+
+    /** @var \Magento\Framework\App\Request\Http $request */
     private \Magento\Framework\App\Request\Http $request;
 
     /**

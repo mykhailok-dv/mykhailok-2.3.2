@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'Magento_Customer/js/customer-data',
     'mage/translate'
-], function ($) {
+], function ($,customerData) {
     'use strict';
 
     /**
@@ -36,6 +37,7 @@ define([
          * @see chat.showChat
          */
         openChat: function () {
+            customerData.reload(['support-chat']);
             $(document).trigger('mykhailok_SupportChat_showChat');
 
             if (this.options.hideButton) {

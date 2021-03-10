@@ -15,10 +15,19 @@ namespace Mykhailok\SupportChat\Model;
  */
 class MessageAuthor extends \Magento\Framework\DataObject
 {
+    /** @var \Magento\Backend\Model\Auth\Session $backendSession */
     private \Magento\Backend\Model\Auth\Session $backendSession;
+
+    /** @var \Magento\Customer\Model\Session $customerSession */
     private \Magento\Customer\Model\Session $customerSession;
+
+    /** @var \Magento\Framework\App\RequestInterface $request */
     private \Magento\Framework\App\RequestInterface $request;
+
+    /** @var \Magento\Framework\Session\SessionManager $sessionManager */
     private \Magento\Framework\Session\SessionManager $sessionManager;
+
+    /** @var ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection;
 
     /**
@@ -75,19 +84,19 @@ class MessageAuthor extends \Magento\Framework\DataObject
                 if ($user instanceof \Magento\User\Model\User) {
                     $this->setId((int)$user->getId())
                         ->setName($user->getName())
-                        ->setHash($this->request->getParam('chat_hash', null));
+                        ->setHash($this->request->getParam('chat_hash'));
                 }
                 break;
             case \Magento\Authorization\Model\UserContextInterface::USER_TYPE_CUSTOMER:
                 $customer = $this->customerSession->getCustomer();
                 $chatHash = $this->chatMessageCollection->create()
-                    ->addAuthorIdFilter((int)$this->_getData('id'))
-                    ->addAuthorTypeFilter((int)$this->_getData('type'))
-                    ->setPageSize(1)
-                    ->getFirstItem()
-                    ->getData('chat_hash') ?? $this->sessionManager->getSessionId();
+                        ->addAuthorIdFilter((int)$this->_getData('id'))
+                        ->addAuthorTypeFilter((int)$this->_getData('type'))
+                        ->setPageSize(1)
+                        ->getFirstItem()
+                        ->getData('chat_hash') ?? $this->sessionManager->getSessionId();
 
-                $this->setId((int) $customer->getId())
+                $this->setId((int)$customer->getId())
                     ->setName($customer->getName())
                     ->setHash($chatHash);
                 break;

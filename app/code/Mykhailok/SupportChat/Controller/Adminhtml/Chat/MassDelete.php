@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class Delete implements \Magento\Framework\App\ActionInterface
+class MassDelete implements \Magento\Framework\App\ActionInterface
 {
     /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
+
+    /** @var \Magento\Ui\Component\MassAction\Filter $filter */
+    private \Magento\Ui\Component\MassAction\Filter $filter;
 
     /** @var \Magento\Framework\DB\TransactionFactory $transactionFactory */
     private \Magento\Framework\DB\TransactionFactory $transactionFactory;
@@ -17,29 +20,26 @@ class Delete implements \Magento\Framework\App\ActionInterface
     /** @var \Magento\Framework\Message\ManagerInterface $messageManager */
     private \Magento\Framework\Message\ManagerInterface $messageManager;
 
-    /** @var \Magento\Framework\App\RequestInterface $request */
-    private \Magento\Framework\App\RequestInterface $request;
-
     /**
      * MassDelete constructor.
      * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory
+     * @param \Magento\Ui\Component\MassAction\Filter $filter
      * @param \Magento\Framework\DB\TransactionFactory $transactionFactory
      * @param \Magento\Framework\Controller\ResultFactory $resultFactory
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\App\RequestInterface $request
      */
     public function __construct(
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
+        \Magento\Ui\Component\MassAction\Filter $filter,
         \Magento\Framework\DB\TransactionFactory $transactionFactory,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Framework\App\RequestInterface $request
+        \Magento\Framework\Message\ManagerInterface $messageManager
     ) {
         $this->chatCollectionFactory = $chatCollectionFactory;
+        $this->filter = $filter;
         $this->transactionFactory = $transactionFactory;
         $this->resultFactory = $resultFactory;
         $this->messageManager = $messageManager;
-        $this->request = $request;
     }
 
     /**
@@ -47,29 +47,25 @@ class Delete implements \Magento\Framework\App\ActionInterface
      */
     public function execute(): \Magento\Backend\Model\View\Result\Redirect
     {
+        /** @var \Magento\Framework\DB\Transaction $transaction */
+        $transaction = $this->transactionFactory->create();
         try {
-            $chatId = (int)$this->request->getParam('id');
+            $collection = $this->filter->getCollection($this->chatCollectionFactory->create());
 
-            if (!empty($chatId)) {
-                /** @var \Mykhailok\SupportChat\Model\Chat $chatModel */
-                $chatModel = $this->chatCollectionFactory->create()
-                    ->addChatIdFilter($chatId)
-                    ->getFirstItem();
-
-                $this->transactionFactory->create()
-                    ->addObject($chatModel)
-                    ->delete();
+            foreach ($collection as $item) {
+                $transaction->addObject($item);
             }
 
-            !empty($chatId)
-                ? $this->messageManager->addSuccessMessage(__('%1 chat(s) have been deleted.', 1))
-                : $this->messageManager->addErrorMessage(__('Please, select chat which should be deleted'));
-        } catch (\Exception $e) {
+            $transaction->delete();
+            $collectionSize = $collection->count();
+            $this->messageManager->addSuccessMessage(__('%1 preference(s) have been deleted.', $collectionSize));
+        } catch (\Exception|\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage($e);
         }
 
-        return $this->resultFactory->create(
-            \Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT
-        )->setPath('*/*/');
+        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        $resultRedirect = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);
+
+        return $resultRedirect->setPath('*/*/');
     }
 }

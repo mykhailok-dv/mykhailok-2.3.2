@@ -11,7 +11,10 @@ class BlockActions extends \Magento\Ui\Component\Listing\Columns\Column
     public const URL_PATH_DELETE = 'my_chat/chat/delete';
     public const URL_PATH_DETAILS = 'my_chat/chat/details';
 
+    /** @var \Magento\Framework\UrlInterface $urlBuilder */
     private \Magento\Framework\UrlInterface $urlBuilder;
+
+    /** @var \Magento\Framework\Escaper $escaper */
     private \Magento\Framework\Escaper $escaper;
 
     /**
@@ -71,7 +74,10 @@ class BlockActions extends \Magento\Ui\Component\Listing\Columns\Column
                             'label' => __('Delete'),
                             'confirm' => [
                                 'title' => __('Delete chat with %1', $authorName),
-                                'message' => __('Are you sure you want to delete the chat with %1 customer?', $authorName),
+                                'message' => __(
+                                    'Are you sure you want to delete the chat with %1 customer?',
+                                    $authorName
+                                ),
                             ],
                             'post' => true,
                         ],

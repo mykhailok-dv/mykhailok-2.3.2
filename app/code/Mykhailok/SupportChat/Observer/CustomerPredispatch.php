@@ -5,7 +5,10 @@ namespace Mykhailok\SupportChat\Observer;
 
 class CustomerPredispatch implements \Magento\Framework\Event\ObserverInterface
 {
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
     private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
+
+    /** @var \Magento\Framework\Session\SessionManager $sessionManager */
     private \Magento\Framework\Session\SessionManager $sessionManager;
 
     /**

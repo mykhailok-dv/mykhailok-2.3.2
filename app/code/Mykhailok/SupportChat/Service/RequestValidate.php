@@ -5,7 +5,10 @@ namespace Mykhailok\SupportChat\Service;
 
 class RequestValidate
 {
+    /** @var \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator */
     private \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator;
+
+    /** @var \Magento\Framework\App\RequestInterface $request */
     private \Magento\Framework\App\RequestInterface $request;
 
     /**

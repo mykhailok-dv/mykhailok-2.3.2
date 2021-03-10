@@ -18,6 +18,9 @@
                 <param name="indexField" xsi:type="string">id</param>
             </storageConfig>
             <updateUrl path="mui/index/render"/>
+            <filterUrlParams>
+                <param name="chat_id">*</param>
+            </filterUrlParams>
         </settings>
         <aclResource>Mykhailok_SupportChat::chat-listing</aclResource>
         <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="messages_listing_data_source">
@@ -32,24 +35,7 @@
             <sticky>true</sticky>
         </settings>
         <bookmark name="bookmarks"/>
-        <columnsControls name="columns_controls"/>
         <filterSearch name="fulltext"/>
-        <filters name="listing_filters"/>
-        <exportButton name="export_button"/>
-        <massaction name="listing_massaction">
-            <action name="delete">
-                <settings>
-                    <confirm>
-                        <message translate="true">Are you sure you want to delete the selected messages?</message>
-                        <title translate="true">Delete chat</title>
-                    </confirm>
-                    <url path="my_chat/letter/delete"/>
-                    <type>delete</type>
-                    <label translate="true">Delete Chat</label>
-                </settings>
-            </action>
-        </massaction>
-        <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="messages_columns">
         <settings>
@@ -57,16 +43,12 @@
                 <param name="enabled" xsi:type="boolean">false</param>
             </editorConfig>
         </settings>
-        <selectionsColumn name="ids" sortOrder="0">
-            <settings>
-                <indexField>id</indexField>
-            </settings>
-        </selectionsColumn>
-        <column name="author_type" sortOrder="10">
+        <column name="author_type" component="Magento_Ui/js/grid/columns/select" sortOrder="10">
             <settings>
                 <filter>select</filter>
                 <label translate="true">Author Type</label>
                 <dataType>select</dataType>
+                <options class="Mykhailok\SupportChat\Model\Options\AuthorType"/>
             </settings>
         </column>
         <column name="author_name" sortOrder="20">
@@ -81,16 +63,11 @@
                 <label translate="true">Message</label>
             </settings>
         </column>
-        <actionsColumn name="actions" class="Mykhailok\SupportChat\Ui\Component\Listing\Column\BlockActions" sortOrder="40">
-            <settings>
-                <indexField>id</indexField>
-            </settings>
-        </actionsColumn>
         <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="60">
             <settings>
                 <filter>dateRange</filter>
                 <dataType>date</dataType>
-                <label translate="true">Created At</label>
+                <label translate="true">Sent At</label>
             </settings>
         </column>
     </columns>

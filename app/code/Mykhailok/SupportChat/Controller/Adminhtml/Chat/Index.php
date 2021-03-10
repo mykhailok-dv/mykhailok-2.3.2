@@ -6,6 +6,8 @@ namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 class Index implements \Magento\Framework\App\ActionInterface
 {
     public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat-listing';
+
+    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
     private \Magento\Framework\Controller\ResultFactory $resultFactory;
 
     /**
@@ -19,7 +21,7 @@ class Index implements \Magento\Framework\App\ActionInterface
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      */
     public function execute(): \Magento\Framework\Controller\ResultInterface
     {

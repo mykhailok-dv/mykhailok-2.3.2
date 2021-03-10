@@ -21,39 +21,6 @@ namespace Mykhailok\SupportChat\Model;
  */
 class ChatMessage extends \Magento\Framework\Model\AbstractModel
 {
-    private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatMessageCollection;
-    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
-
-    /**
-     * ChatMessage constructor.
-     * @param ResourceModel\ChatMessage\Collection $chatMessageCollection
-     * @param MessageAuthor $messageAuthor
-     * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
-     * @param array $data
-     */
-    public function __construct(
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\Collection $chatMessageCollection,
-        \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
-        \Magento\Framework\Model\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
-    ) {
-        parent::__construct(
-            $context,
-            $registry,
-            $resource,
-            $resourceCollection,
-            $data
-        );
-        $this->chatMessageCollection = $chatMessageCollection;
-        $this->messageAuthor = $messageAuthor;
-    }
-
     /**
      * @inheirtDoc
      */

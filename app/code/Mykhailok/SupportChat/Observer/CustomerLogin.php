@@ -5,11 +5,17 @@ namespace Mykhailok\SupportChat\Observer;
 
 class CustomerLogin implements \Magento\Framework\Event\ObserverInterface
 {
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
+
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
     private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
+
+    /** @var \Magento\Framework\Session\SessionManager $sessionManager */
     private \Magento\Framework\Session\SessionManager $sessionManager;
-    private \Psr\Log\LoggerInterface $logger;
 
     /**
      * CustomerLogin constructor.
@@ -17,20 +23,17 @@ class CustomerLogin implements \Magento\Framework\Event\ObserverInterface
      * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat
      * @param \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
      * @param \Magento\Framework\Session\SessionManager $sessionManager
-     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
-        \Magento\Framework\Session\SessionManager $sessionManager,
-        \Psr\Log\LoggerInterface $logger
+        \Magento\Framework\Session\SessionManager $sessionManager
     ) {
         $this->chatCollectionFactory = $chatCollectionFactory;
         $this->resourceModelChat = $resourceModelChat;
         $this->messageAuthor = $messageAuthor;
         $this->sessionManager = $sessionManager;
-        $this->logger = $logger;
     }
 
     /**
@@ -43,13 +46,11 @@ class CustomerLogin implements \Magento\Framework\Event\ObserverInterface
         $loggedCustomerChatHash = $this->sessionManager->getSessionId();
         $questCustomerChatHash = $this->messageAuthor->getQuestHash();
 
+        /** @var \Mykhailok\SupportChat\Model\Chat $chatModel */
         $chatModel = $this->chatCollectionFactory->create()
             ->addHashFilter($questCustomerChatHash)
             ->getFirstItem();
-
-        if ($chatModel instanceof \Mykhailok\SupportChat\Model\Chat) {
-            $chatModel->setHash($loggedCustomerChatHash);
-            $this->resourceModelChat->save($chatModel);
-        }
+        $chatModel->setHash($loggedCustomerChatHash);
+        $this->resourceModelChat->save($chatModel);
     }
 }

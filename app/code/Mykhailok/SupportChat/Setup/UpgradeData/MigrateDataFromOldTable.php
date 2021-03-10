@@ -5,13 +5,22 @@ namespace Mykhailok\SupportChat\Setup\UpgradeData;
 
 class MigrateDataFromOldTable
 {
+    /** @var \Mykhailok\SupportChat\Model\ChatFactory $chatFactory */
     private \Mykhailok\SupportChat\Model\ChatFactory $chatFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory */
     private \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage;
-    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
-    private \Magento\Store\Model\StoreManagerInterface $storeManager;
+
+    /** @var \Magento\Framework\App\ResourceConnection $resourceConnection */
     private \Magento\Framework\App\ResourceConnection $resourceConnection;
+
+    /** @var \Psr\Log\LoggerInterface $logger */
     private \Psr\Log\LoggerInterface $logger;
 
     /**
@@ -20,8 +29,6 @@ class MigrateDataFromOldTable
      * @param \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory
      * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat
      * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage
-     * @param \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\App\ResourceConnection $resourceConnection
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -30,8 +37,6 @@ class MigrateDataFromOldTable
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage,
-        \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\App\ResourceConnection $resourceConnection,
         \Psr\Log\LoggerInterface $logger
     ) {
@@ -39,8 +44,6 @@ class MigrateDataFromOldTable
         $this->chatMessageFactory = $chatMessageFactory;
         $this->resourceModelChat = $resourceModelChat;
         $this->resourceModelChatMessage = $resourceModelChatMessage;
-        $this->messageAuthor = $messageAuthor;
-        $this->storeManager = $storeManager;
         $this->resourceConnection = $resourceConnection;
         $this->logger = $logger;
     }
