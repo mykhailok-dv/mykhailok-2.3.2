@@ -3,23 +3,11 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class Details implements \Magento\Framework\App\ActionInterface,
+class Details extends \Magento\Backend\App\Action implements
+    \Magento\Framework\App\ActionInterface,
     \Magento\Framework\App\Action\HttpGetActionInterface
 {
-    public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat-listing';
-
-    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
-    private \Magento\Framework\Controller\ResultFactory $resultFactory;
-
-    /**
-     * Details constructor.
-     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
-     */
-    public function __construct(
-        \Magento\Framework\Controller\ResultFactory $resultFactory
-    ) {
-        $this->resultFactory = $resultFactory;
-    }
+    public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat_reading';
 
     /**
      * @return \Magento\Framework\Controller\ResultInterface
