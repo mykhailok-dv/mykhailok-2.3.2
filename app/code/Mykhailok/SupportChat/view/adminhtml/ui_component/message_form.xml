@@ -35,6 +35,7 @@
                 <param name="chat_id">*</param>
             </filterUrlParams>
         </settings>
+        <aclResource>Mykhailok_SupportChat::chat_chatting</aclResource>
         <dataProvider name="message_form_data_source" class="Mykhailok\SupportChat\Model\ChatMessages\DataProvider">
             <settings>
                 <requestFieldName>chat_id</requestFieldName>

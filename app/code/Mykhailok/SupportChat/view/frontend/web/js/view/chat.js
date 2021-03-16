@@ -39,9 +39,9 @@ define([
         saveMessage: function () {
             var self = this,
             data = {
-                message: this.messageValue(),
-                'form_key': $.mage.cookies.get('form_key'),
-                isAjax: 1
+                'chatMessageData': {
+                    'message': this.messageValue(),
+                }
             };
 
             saveMessage(data, this.action, this)
