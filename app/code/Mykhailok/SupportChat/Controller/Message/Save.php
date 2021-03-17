@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Message;
 
-class Save implements
-    \Magento\Framework\App\ActionInterface,
-    \Magento\Framework\App\Action\HttpPostActionInterface
+class Save implements \Magento\Framework\App\Action\HttpPostActionInterface
 {
     /** @var \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory */
     private \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory;

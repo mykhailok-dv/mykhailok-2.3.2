@@ -39,7 +39,8 @@ class RegisterAuthorizationRoles
      * @return void
      * @throws \Exception
      */
-    public function execute(string $additionalRoleRulesVersion): void {
+    public function execute(string $additionalRoleRulesVersion): void
+    {
         $neededRoles = $this->{'getRoleRules' . $additionalRoleRulesVersion}();
 
         /* This code will be running every setup:upgrade,
@@ -106,24 +107,18 @@ class RegisterAuthorizationRoles
         ];
 
         return [
-            'Customer Chat Manager (All rules)' =>
-                array_merge($commonResources, [
-                    $allResources['reading'],
-                    $allResources['chatting'],
-                    $allResources['delete'],
-                    ]
-                ),
-            'Customer Chat Manager (Can chatting with client)' =>
-                array_merge($commonResources, [
-                    $allResources['reading'],
-                    $allResources['chatting'],
-                    ]
-                ),
-            'Customer Chat Manager (Can reading client chats)' =>
-                array_merge($commonResources, [
-                    $allResources['reading'],
-                    ]
-                ),
-            ];
+            'Customer Chat Manager (All rules)' => array_merge($commonResources, [
+                $allResources['reading'],
+                $allResources['chatting'],
+                $allResources['delete'],
+            ]),
+            'Customer Chat Manager (Can chatting with client)' => array_merge($commonResources, [
+                $allResources['reading'],
+                $allResources['chatting'],
+            ]),
+            'Customer Chat Manager (Can reading client chats)' => array_merge($commonResources, [
+                $allResources['reading'],
+            ]),
+        ];
     }
 }

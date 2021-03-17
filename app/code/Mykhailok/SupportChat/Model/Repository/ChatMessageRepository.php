@@ -11,8 +11,7 @@ class ChatMessageRepository extends \Mykhailok\SupportChat\Model\Repository\Abst
      */
     public function get(
         int $id
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface {
         $chatMessage = $this->chatMessageDataFactory->create();
 
         return $this->entityManager->load($chatMessage, $id);

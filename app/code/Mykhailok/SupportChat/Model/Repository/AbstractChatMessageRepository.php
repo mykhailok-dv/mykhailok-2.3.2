@@ -55,8 +55,7 @@ abstract class AbstractChatMessageRepository implements \Mykhailok\SupportChat\A
      */
     public function save(
         \Mykhailok\SupportChat\Api\Data\ChatMessageInterface $chatMessageData
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface {
         try {
             $this->entityManager->save($chatMessageData);
         } catch (\Exception $exception) {
@@ -73,8 +72,7 @@ abstract class AbstractChatMessageRepository implements \Mykhailok\SupportChat\A
      */
     public function get(
         int $id
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface {
         throw new \Magento\Framework\Exception\IntegrationException(__('This method should be overridden.'));
     }
 
@@ -84,8 +82,7 @@ abstract class AbstractChatMessageRepository implements \Mykhailok\SupportChat\A
      */
     public function getList(
         ?\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageSearchResultInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageSearchResultInterface {
         $chatMessageCollection = $this->chatMessageCollectionFactory->create();
         $this->collectionProcessor->process($searchCriteria, $chatMessageCollection);
         $chatMessages = [];
@@ -110,8 +107,7 @@ abstract class AbstractChatMessageRepository implements \Mykhailok\SupportChat\A
      */
     public function delete(
         \Mykhailok\SupportChat\Api\Data\ChatMessageInterface $chatMessage
-    ): bool
-    {
+    ): bool {
         try {
             $this->entityManager->delete($chatMessage);
         } catch (\Exception $e) {
@@ -124,11 +120,11 @@ abstract class AbstractChatMessageRepository implements \Mykhailok\SupportChat\A
     /**
      * @param int $id
      * @return bool
+     * @throws \Magento\Framework\Exception\IntegrationException
      */
     public function deleteById(
         int $id
-    ): bool
-    {
+    ): bool {
         return $this->delete($this->get($id));
     }
 }

@@ -61,8 +61,7 @@ class FrontendChatMessageRepository extends AbstractChatMessageRepository
      */
     public function save(
         \Mykhailok\SupportChat\Api\Data\ChatMessageInterface $chatMessageData
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface {
         $chatMessageModel = $this->messageUserDataProviderFactory->create()
             ->getChatMessageWithUserData();
         $chatMessageData
@@ -75,8 +74,9 @@ class FrontendChatMessageRepository extends AbstractChatMessageRepository
         return parent::save($chatMessageData);
     }
 
-    public function get(int $id): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
-    {
+    public function get(
+        int $id
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageInterface {
         $chatModel = $this->getChatModel();
         $chatMessageCollection = $this->chatMessageCollectionFactory->create();
         $chatMessageData = $this->chatMessageDataFactory->create();
@@ -98,8 +98,7 @@ class FrontendChatMessageRepository extends AbstractChatMessageRepository
      */
     public function getList(
         ?\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-    ): \Mykhailok\SupportChat\Api\Data\ChatMessageSearchResultInterface
-    {
+    ): \Mykhailok\SupportChat\Api\Data\ChatMessageSearchResultInterface {
         $this->addCustomerChatIdFilterToSearchCriteria($searchCriteria);
 
         return parent::getList($searchCriteria);
@@ -110,27 +109,27 @@ class FrontendChatMessageRepository extends AbstractChatMessageRepository
      */
     protected function addCustomerChatIdFilterToSearchCriteria(
         ?\Magento\Framework\Api\SearchCriteriaInterface &$searchCriteria
-    ): void
-    {
+    ): void {
         $chatModel = $this->getChatModel();
-            /** @var \Magento\Framework\Api\Filter $filter */
-            $chatIdFilter = $this->filterBuilder->create()
-                ->setField('chat_id')
-                ->setValue($chatModel->getId())
-                ->setConditionType('eq');
 
-            $filterGroups = $searchCriteria->getFilterGroups();
-            foreach ($filterGroups as &$filterGroup) {
-                $existingFilters = $filterGroup->getFilters();
-                $updatedFilters = array_merge($existingFilters, [$chatIdFilter]);
-                $filterGroup->setFilters($updatedFilters);
-            }
+        /** @var \Magento\Framework\Api\Filter $filter */
+        $chatIdFilter = $this->filterBuilder->create()
+            ->setField('chat_id')
+            ->setValue($chatModel->getId())
+            ->setConditionType('eq');
 
-            if (empty($filterGroups)) {
-                $filterGroups[] = $this->filterGroupBuilder->addFilter($chatIdFilter)->create();
-            }
+        $filterGroups = $searchCriteria->getFilterGroups();
+        foreach ($filterGroups as &$filterGroup) {
+            $existingFilters = $filterGroup->getFilters();
+            $updatedFilters = array_merge($existingFilters, [$chatIdFilter]);
+            $filterGroup->setFilters($updatedFilters);
+        }
 
-            $searchCriteria->setFilterGroups($filterGroups);
+        if (empty($filterGroups)) {
+            $filterGroups[] = $this->filterGroupBuilder->addFilter($chatIdFilter)->create();
+        }
+
+        $searchCriteria->setFilterGroups($filterGroups);
     }
 
     /**

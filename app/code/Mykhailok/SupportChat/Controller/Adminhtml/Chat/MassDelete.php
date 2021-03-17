@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class MassDelete implements \Magento\Framework\App\ActionInterface,
-    \Magento\Framework\App\Action\HttpPostActionInterface
+class MassDelete extends \Magento\Framework\App\Action\Action
+    implements \Magento\Framework\App\Action\HttpPostActionInterface
 {
+    public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat_delete';
+
     /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
 
@@ -15,32 +17,23 @@ class MassDelete implements \Magento\Framework\App\ActionInterface,
     /** @var \Magento\Framework\DB\TransactionFactory $transactionFactory */
     private \Magento\Framework\DB\TransactionFactory $transactionFactory;
 
-    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
-    private \Magento\Framework\Controller\ResultFactory $resultFactory;
-
-    /** @var \Magento\Framework\Message\ManagerInterface $messageManager */
-    private \Magento\Framework\Message\ManagerInterface $messageManager;
-
     /**
      * MassDelete constructor.
+     * @param \Magento\Framework\App\Action\Context $context
      * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory
      * @param \Magento\Ui\Component\MassAction\Filter $filter
      * @param \Magento\Framework\DB\TransactionFactory $transactionFactory
-     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
      */
     public function __construct(
+        \Magento\Framework\App\Action\Context $context,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
         \Magento\Ui\Component\MassAction\Filter $filter,
-        \Magento\Framework\DB\TransactionFactory $transactionFactory,
-        \Magento\Framework\Controller\ResultFactory $resultFactory,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Magento\Framework\DB\TransactionFactory $transactionFactory
     ) {
+        parent::__construct($context);
         $this->chatCollectionFactory = $chatCollectionFactory;
         $this->filter = $filter;
         $this->transactionFactory = $transactionFactory;
-        $this->resultFactory = $resultFactory;
-        $this->messageManager = $messageManager;
     }
 
     /**

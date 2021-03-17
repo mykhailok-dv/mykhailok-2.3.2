@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Model;
 
-
 class ChatMessageData extends \Magento\Framework\Api\AbstractSimpleObject implements
     \Mykhailok\SupportChat\Api\Data\ChatMessageInterface
 {

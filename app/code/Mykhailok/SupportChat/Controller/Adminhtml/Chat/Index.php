@@ -3,26 +3,13 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class Index implements \Magento\Framework\App\ActionInterface,
-    \Magento\Framework\App\Action\HttpGetActionInterface
+class Index extends \Magento\Framework\App\Action\Action
+    implements \Magento\Framework\App\Action\HttpGetActionInterface
 {
-    public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat-listing';
-
-    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
-    private \Magento\Framework\Controller\ResultFactory $resultFactory;
+    public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat_reading';
 
     /**
-     * Index constructor.
-     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
-     */
-    public function __construct(
-        \Magento\Framework\Controller\ResultFactory $resultFactory
-    ) {
-        $this->resultFactory = $resultFactory;
-    }
-
-    /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute(): \Magento\Framework\Controller\ResultInterface
     {
