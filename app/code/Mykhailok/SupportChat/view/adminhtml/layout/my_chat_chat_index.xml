@@ -3,7 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <uiComponent name="chats_listing"/>
+            <uiComponent name="chats_listing" aclResource="Mykhailok_SupportChat::chat_reading"/>
         </referenceContainer>
     </body>
 </page>

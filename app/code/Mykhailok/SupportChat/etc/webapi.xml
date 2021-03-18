@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- API. -->
+    <!-- GET -->
+    <route url="/V1/chat-messages/messages" method="GET">
+        <service class="Mykhailok\SupportChat\Api\ChatMessageRepositoryInterface"
+                 method="getList"/>
+        <resources>
+            <resource ref="Mykhailok_SupportChat::chat_reading"/>
+        </resources>
+    </route>
+    <route url="/V1/chat-messages/messages/:id" method="GET">
+        <service class="Mykhailok\SupportChat\Api\ChatMessageRepositoryInterface"
+                 method="get"/>
+        <resources>
+            <resource ref="Mykhailok_SupportChat::chat_reading"/>
+        </resources>
+    </route>
+    <!-- DELETE -->
+    <route url="/V1/chat-messages/messages/:id" method="GET">
+        <service class="Mykhailok\SupportChat\Api\ChatMessageRepositoryInterface"
+                 method="deleteById"/>
+        <resources>
+            <resource ref="Mykhailok_SupportChat::chat_delete"/>
+        </resources>
+    </route>
+
+
+    <!-- Personal Messages. -->
+    <!-- GET -->
+    <route url="/V1/chat-messages/personal-messages" method="GET">
+        <service class="Mykhailok\SupportChat\Api\FrontendChatMessageRepositoryInterface"
+                 method="getList"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route url="/V1/chat-messages/personal-messages/:id" method="GET">
+        <service class="Mykhailok\SupportChat\Api\FrontendChatMessageRepositoryInterface"
+                 method="get"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <!-- POST -->
+    <route url="/V1/chat-messages/personal-messages" method="POST">
+        <service class="Mykhailok\SupportChat\Api\FrontendChatMessageRepositoryInterface"
+                 method="save"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+</routes>

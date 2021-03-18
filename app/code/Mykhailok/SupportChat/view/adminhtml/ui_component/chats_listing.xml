@@ -19,7 +19,7 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>Mykhailok_SupportChat::chat-listing</aclResource>
+        <aclResource>Mykhailok_SupportChat::chat_reading</aclResource>
         <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="chats_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>

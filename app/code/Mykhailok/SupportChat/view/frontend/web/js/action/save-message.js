@@ -10,9 +10,10 @@ define([
     return function (data, url) {
         return $.ajax({
             url: url,
-            data: data,
+            data: JSON.stringify(data),
             type: 'post',
             dataType: 'json',
+            contentType: 'application/json',
             context: this,
 
             /** @inheritdoc */

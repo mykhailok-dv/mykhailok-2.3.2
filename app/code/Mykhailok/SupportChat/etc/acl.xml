@@ -13,7 +13,14 @@
                     </resource>
                 </resource>
                 <resource id="Magento_Customer::customer">
-                    <resource id="Mykhailok_SupportChat::listing" title="Customer Chats" translate="title" sortOrder="50"/>
+                    <resource id="Mykhailok_SupportChat::chat_manage" title="All Customer Chats" translate="title" sortOrder="50">
+                        <resource id="Mykhailok_SupportChat::chat_actions" title="Actions" translate="title" sortOrder="10">
+                            <resource id="Mykhailok_SupportChat::chat_delete" title="Delete chat" translate="title" sortOrder="10"/>
+                            <resource id="Mykhailok_SupportChat::chat_reading" title="Reading messages" translate="title" sortOrder="20">
+                                <resource id="Mykhailok_SupportChat::chat_chatting" title="Chatting with customer" translate="title" sortOrder="10"/>
+                            </resource>
+                        </resource>
+                    </resource>
                 </resource>
             </resource>
         </resources>

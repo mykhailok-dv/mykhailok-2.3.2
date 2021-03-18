@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Chat;
 
-class MassDelete extends \Magento\Backend\App\Action implements
-    \Magento\Framework\App\ActionInterface,
-    \Magento\Framework\App\Action\HttpPostActionInterface
+class MassDelete extends \Magento\Framework\App\Action\Action
+    implements \Magento\Framework\App\Action\HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat_delete';
 
@@ -20,13 +19,13 @@ class MassDelete extends \Magento\Backend\App\Action implements
 
     /**
      * MassDelete constructor.
-     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\App\Action\Context $context
      * @param \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory
      * @param \Magento\Ui\Component\MassAction\Filter $filter
      * @param \Magento\Framework\DB\TransactionFactory $transactionFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
+        \Magento\Framework\App\Action\Context $context,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
         \Magento\Ui\Component\MassAction\Filter $filter,
         \Magento\Framework\DB\TransactionFactory $transactionFactory

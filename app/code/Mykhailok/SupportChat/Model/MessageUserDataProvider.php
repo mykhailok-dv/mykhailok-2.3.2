@@ -5,7 +5,7 @@ namespace Mykhailok\SupportChat\Model;
 
 class MessageUserDataProvider
 {
-    /** @var Chat  */
+    /** @var \Mykhailok\SupportChat\Model\Chat  */
     protected \Mykhailok\SupportChat\Model\Chat $chatModel;
 
     /** @var \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory */

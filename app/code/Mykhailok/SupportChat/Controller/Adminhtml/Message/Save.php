@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Adminhtml\Message;
 
-class Save extends \Magento\Backend\App\Action implements
-    \Magento\Framework\App\ActionInterface,
-    \Magento\Framework\App\Action\HttpPostActionInterface
+class Save extends \Magento\Framework\App\Action\Action
+    implements \Magento\Framework\App\Action\HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'Mykhailok_SupportChat::chat_chatting';
 
@@ -20,13 +19,13 @@ class Save extends \Magento\Backend\App\Action implements
 
     /**
      * Save constructor.
-     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\App\Action\Context $context
      * @param \Mykhailok\SupportChat\Service\RequestValidate $requestValidate
      * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage
      * @param \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
+        \Magento\Framework\App\Action\Context $context,
         \Mykhailok\SupportChat\Service\RequestValidate $requestValidate,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage,
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory
@@ -37,6 +36,10 @@ class Save extends \Magento\Backend\App\Action implements
         $this->chatMessageFactory = $chatMessageFactory;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \Exception
+     */
     public function execute()
     {
         $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);
