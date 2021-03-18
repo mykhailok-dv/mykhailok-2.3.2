@@ -298,7 +298,7 @@ class DiCompileCommand extends Command
     }
 
     /**
-     * Delete directories by their code from "var" directory
+     * MassDelete directories by their code from "var" directory
      *
      * @param array $directoryCodeList
      * @return void

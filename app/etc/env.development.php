@@ -18,8 +18,8 @@ return [
             'default' => [
                 'host' => 'mysql',
                 'dbname' => 'mykhailok_local',
-                'username' => 'root',
-                'password' => 'root',
+                'username' => 'mykhailok',
+                'password' => 'icantbelieve',
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
@@ -78,7 +78,7 @@ return [
         ]
     ],
     'x-frame-options' => 'SAMEORIGIN',
-    'MAGE_MODE' => 'developer',
+    'MAGE_MODE' => 'production',
     'session' => [
         'save' => 'files'
     ],

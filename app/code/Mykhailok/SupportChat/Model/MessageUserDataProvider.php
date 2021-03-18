@@ -3,58 +3,83 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Model;
 
-/**
- * Class MessageUserDataProvider
- * Provide method getChatMessageWithUserData();
- */
 class MessageUserDataProvider
 {
-    /**
-     * @var \Mykhailok\SupportChat\Model\ChatMessageFactory
-     */
-    private $chatMessageFactory;
+    /** @var Chat  */
+    protected \Mykhailok\SupportChat\Model\Chat $chatModel;
 
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    private $storeManager;
+    /** @var \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory */
+    private \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory;
 
-    /**
-     * @var MessageAuthor
-     */
-    private $messageAuthor;
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat*/
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
 
-    /**
-     * MessageUserDataProvider constructor.
-     * @param \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
-     */
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory */
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
+    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
+
+    /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
+    private \Magento\Store\Model\StoreManagerInterface $storeManager;
+
     public function __construct(
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
+        \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
+        \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
+        \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->chatMessageFactory = $chatMessageFactory;
-        $this->storeManager = $storeManager;
+        $this->resourceModelChat = $resourceModelChat;
+        $this->chatCollectionFactory = $chatCollectionFactory;
         $this->messageAuthor = $messageAuthor;
+        $this->storeManager = $storeManager;
     }
 
     /**
-     * @return ChatMessage
+     * @return \Mykhailok\SupportChat\Model\ChatMessage
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getChatMessageWithUserData(): ChatMessage
+    public function getChatMessageWithUserData(): \Mykhailok\SupportChat\Model\ChatMessage
     {
-        /** @var ChatMessage $chatMessage */
+        $chatModel = $this->getChatWithUserData();
+
+        /** @var \Mykhailok\SupportChat\Model\ChatMessage $chatMessage */
         $chatMessage = $this->chatMessageFactory->create();
 
-        $chatMessage->setAuthorId($this->messageAuthor->getId())
+        $chatMessage
+            ->setChatId($chatModel->getId())
+            ->setAuthorId($this->messageAuthor->getId())
             ->setAuthorType($this->messageAuthor->getType())
-            ->setAuthorName($this->messageAuthor->getName())
-            ->setWebsiteId((int)$this->storeManager->getWebsite()->getId())
-            ->setChatHash($this->messageAuthor->getHash());
+            ->setAuthorName($this->messageAuthor->getName());
 
         return $chatMessage;
+    }
+
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getChatWithUserData(): \Mykhailok\SupportChat\Model\Chat
+    {
+        if (!isset($this->chatModel)) {
+            /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\Collection $chatCollection */
+            $chatCollection = $this->chatCollectionFactory->create();
+            $chatCollection->addHashFilter($this->messageAuthor->getHash());
+
+            /** @var \Mykhailok\SupportChat\Model\Chat $chatModel */
+            $chatModel = $chatCollection->getFirstItem();
+
+            if ($chatModel->getId()) {
+                $this->chatModel = $chatModel;
+            } else {
+                $this->chatModel = $chatModel
+                    ->setHash($this->messageAuthor->getHash())
+                    ->setWebsiteId((int)$this->storeManager->getWebsite()->getId());
+                $this->resourceModelChat->save($chatModel);
+            }
+        }
+
+        return $this->chatModel;
     }
 }

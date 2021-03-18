@@ -18,5 +18,38 @@
             "PRIMARY": true,
             "MYKHAILOK_SUPPORT_CHAT_WEBSITE_ID_STORE_WEBSITE_WEBSITE_ID": true
         }
+    },
+    "my_chat": {
+        "column": {
+            "id": true,
+            "website_id": true,
+            "hash": true
+        },
+        "index": {
+            "MYKHAILOK_SUPPORT_CHAT_WEBSITE_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MY_CHAT_WS_ID_STORE_WS_WS_ID": true
+        }
+    },
+    "my_chat_message": {
+        "column": {
+            "id": true,
+            "chat_id": true,
+            "author_type": true,
+            "author_id": true,
+            "author_name": true,
+            "message": true,
+            "created_at": true
+        },
+        "index": {
+            "MY_CHAT_MESSAGE_CHAT_ID": true,
+            "MY_CHAT_MESSAGE_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "MY_CHAT_MESSAGE_CHAT_ID_MY_CHAT_ID": true
+        }
     }
 }

@@ -3,15 +3,36 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Model\ResourceModel\ChatMessage;
 
-use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
-use Magento\Authorization\Model\UserContextInterface;
-
-class Collection extends AbstractCollection
+class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
-    private static $authorTypes = [
-        UserContextInterface::USER_TYPE_ADMIN,
-        UserContextInterface::USER_TYPE_CUSTOMER,
-        UserContextInterface::USER_TYPE_GUEST,
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat */
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat;
+
+    public function __construct(
+        \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
+        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
+    ) {
+        parent::__construct(
+            $entityFactory,
+            $logger,
+            $fetchStrategy,
+            $eventManager,
+            $connection,
+            $resource
+        );
+        $this->resourceModelChat = $resourceModelChat;
+    }
+
+    /** @var array  */
+    private static array $authorTypes = [
+        \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN,
+        \Magento\Authorization\Model\UserContextInterface::USER_TYPE_CUSTOMER,
+        \Magento\Authorization\Model\UserContextInterface::USER_TYPE_GUEST,
     ];
 
     /**
@@ -45,26 +66,16 @@ class Collection extends AbstractCollection
 
     /**
      * @param \DateTime $from
-     * @param \DateTime $to
-     * @throws \Exception
+     * @param ?\DateTime $to
      * @return $this
      */
     public function addCreatedAtRangeFilter(\DateTime $from, \DateTime $to = null): self
     {
         return $this->addFieldToFilter('created_at', [
             'from' => $from,
-            'to' => $to ?? new \DateTime(),
+            'to' => $to ?: new \DateTime(),
             'datetime' => true,
         ]);
-    }
-
-    /**
-     * @param int $websiteId
-     * @return $this
-     */
-    public function addWebsiteFilter(int $websiteId): self
-    {
-        return $this->addFieldToFilter('website_id', $websiteId);
     }
 
     /**
@@ -77,11 +88,36 @@ class Collection extends AbstractCollection
     }
 
     /**
-     * @param $chatHash
+     * @param $chatId
      * @return $this
      */
-    public function addChatHashFilter($chatHash): self
+    public function addChatIdFilter($chatId): self
     {
-        return $this->addFieldToFilter('chat_hash', $chatHash);
+        return $this->addFieldToFilter('chat_id', $chatId);
+    }
+
+    /**
+     * @param int $messageId
+     * @return $this
+     */
+    public function addMessageIdFilter(int $messageId): self
+    {
+        return $this->addFieldToFilter('id', $messageId);
+    }
+
+    /**
+     * @param $chatHash
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function fetchMessagesByChatHash($chatHash): self
+    {
+        $this->getSelect()->joinLeft(
+            ['my_chat' => $this->resourceModelChat->getMainTable()],
+            'main_table.chat_id = my_chat.id',
+            []
+        );
+
+        return $this->addFieldToFilter('my_chat.hash', $chatHash);
     }
 }

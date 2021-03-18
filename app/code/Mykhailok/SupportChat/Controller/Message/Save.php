@@ -3,91 +3,79 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Controller\Message;
 
-use Magento\Authorization\Model\UserContextInterface;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\Json as JsonResult;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Exception\LocalizedException;
-use Mykhailok\SupportChat\Model\MessageUserDataProvider;
-use Mykhailok\SupportChat\Service\RequestValidate;
-use Mykhailok\SupportChat\Service\ResponseData;
-
-class Save extends \Magento\Framework\App\Action\Action implements
+class Save implements
+    \Magento\Framework\App\ActionInterface,
     \Magento\Framework\App\Action\HttpPostActionInterface
 {
-    /**
-     * @var \Mykhailok\SupportChat\Model\ChatMessageFactory
-     */
-    private $chatMessageFactory;
+    /** @var \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory */
+    private \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory;
+
+    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage */
+    private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage;
+
+    /** @var \Mykhailok\SupportChat\Service\RequestValidate $requestValidate */
+    private \Mykhailok\SupportChat\Service\RequestValidate $requestValidate;
+
+    /** @var \Magento\Framework\Message\ManagerInterface $messageManager */
+    private \Magento\Framework\Message\ManagerInterface $messageManager;
+
+    /** @var \Psr\Log\LoggerInterface $logger */
+    private \Psr\Log\LoggerInterface $logger;
+
+    /** @var \Magento\Framework\Controller\ResultFactory $resultFactory */
+    private \Magento\Framework\Controller\ResultFactory $resultFactory;
+
+    /** @var \Magento\Framework\App\RequestInterface $request */
+    private \Magento\Framework\App\RequestInterface $request;
 
     /**
-     * @var \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory
+     * Save constructor.
+     * @param \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory
+     * @param \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage
+     * @param \Mykhailok\SupportChat\Service\RequestValidate $requestValidate
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
+     * @param \Magento\Framework\App\RequestInterface $request
      */
-    private $messageUserDataProviderFactory;
-
-    /**
-     * @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage
-     */
-    private $chatMessageResource;
-
-    /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @var RequestValidate
-     */
-    private $requestValidate;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
-
     public function __construct(
-        \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\MessageUserDataProviderFactory $messageUserDataProviderFactory,
-        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessageFactory $chatMessageResourceFactory,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage $resourceModelChatMessage,
         \Mykhailok\SupportChat\Service\RequestValidate $requestValidate,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Psr\Log\LoggerInterface $logger,
-        Context $context
+        \Magento\Framework\Controller\ResultFactory $resultFactory,
+        \Magento\Framework\App\RequestInterface $request
     ) {
-        parent::__construct($context);
-        $this->chatMessageFactory = $chatMessageFactory;
         $this->messageUserDataProviderFactory = $messageUserDataProviderFactory;
-        $this->chatMessageResource = $chatMessageResourceFactory->create();
-        $this->storeManager = $storeManager;
+        $this->resourceModelChatMessage = $resourceModelChatMessage;
         $this->requestValidate = $requestValidate;
         $this->messageManager = $messageManager;
         $this->logger = $logger;
+        $this->resultFactory = $resultFactory;
+        $this->request = $request;
     }
 
     /**
      * @inheritDoc
      * https://mykhailokhrypko.local/support/message/index
-     * @return \Magento\Framework\App\ResponseInterface|JsonResult|\Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\Controller\ResultInterface
      */
-    public function execute()
+    public function execute(): \Magento\Framework\Controller\ResultInterface
     {
-        $result = $this->resultFactory->create(ResultFactory::TYPE_JSON);
+        $result = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_JSON);
         try {
             $this->requestValidate->validate();
 
-            /** @var MessageUserDataProvider $messageUserDataProviderFactory */
+            /** @var \Mykhailok\SupportChat\Model\MessageUserDataProvider $messageUserDataProviderFactory */
             $messageUserDataProviderFactory = $this->messageUserDataProviderFactory->create();
-            $chatMessage = $messageUserDataProviderFactory->getChatMessageWithUserData();
+            $chatMessageModel = $messageUserDataProviderFactory->getChatMessageWithUserData();
 
             /** Save a new message. */
-            $chatMessage->setMessage($this->getRequest()->getParam('message'));
-            $this->chatMessageResource->save($chatMessage);
+            $chatMessageModel->setMessage($this->request->getParam('message'));
+            $this->resourceModelChatMessage->save($chatMessageModel);
 
-            /** @TODO: Method is temporary. Should by deleted when will be admin form functional. */
-            $this->emulatorAdminAnswer($chatMessage->getChatHash());
-
-        } catch (LocalizedException $localizedException) {
+        } catch (\Magento\Framework\Exception\LocalizedException $localizedException) {
             $this->messageManager->addErrorMessage($localizedException->getMessage());
             $result->setHttpResponseCode($localizedException->getCode());
         } catch (\Exception $exception) {
@@ -97,26 +85,5 @@ class Save extends \Magento\Framework\App\Action\Action implements
         }
 
         return $result->setData(['messages' => []]);
-    }
-
-    /**
-     * @param $chatHash
-     * @return void
-     */
-    protected function emulatorAdminAnswer($chatHash): void
-    {
-        try {
-            $chatMessage = $this->chatMessageFactory->create();
-            /** @var \Mykhailok\SupportChat\Model\ChatMessage $chat */
-            $chatMessage->setAuthorType(UserContextInterface::USER_TYPE_ADMIN)
-                ->setAuthorId(1)
-                ->setAuthorName('Admin')
-                ->setMessage('Current time: ' . (new \DateTime())->format('Y-m-d H:i:s'))
-                ->setWebsiteId((int)$this->storeManager->getWebsite()->getId())
-                ->setChatHash($chatHash);
-            $this->chatMessageResource->save($chatMessage);
-        } catch (\Exception $exception) {
-            $this->logger->critical($exception);
-        }
     }
 }

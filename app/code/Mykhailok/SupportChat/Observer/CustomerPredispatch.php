@@ -3,22 +3,19 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Observer;
 
-use Magento\Authorization\Model\UserContextInterface;
-use Magento\Customer\Controller\Account\LoginPost;
-use Magento\Framework\Event\Observer;
-use Magento\Framework\Event\ObserverInterface;
-
-class CustomerPredispatch implements ObserverInterface
+class CustomerPredispatch implements \Magento\Framework\Event\ObserverInterface
 {
-    /**
-     * @var \Mykhailok\SupportChat\Model\MessageAuthor
-     */
-    private $messageAuthor;
-    /**
-     * @var \Magento\Framework\Session\SessionManager
-     */
-    private $sessionManager;
+    /** @var \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor */
+    private \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor;
 
+    /** @var \Magento\Framework\Session\SessionManager $sessionManager */
+    private \Magento\Framework\Session\SessionManager $sessionManager;
+
+    /**
+     * CustomerPredispatch constructor.
+     * @param \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor
+     * @param \Magento\Framework\Session\SessionManager $sessionManager
+     */
     public function __construct(
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
         \Magento\Framework\Session\SessionManager $sessionManager
@@ -27,10 +24,16 @@ class CustomerPredispatch implements ObserverInterface
         $this->sessionManager = $sessionManager;
     }
 
-    public function execute(Observer $observer)
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     */
+    public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $userIsQuest = $this->messageAuthor->getUserType() === UserContextInterface::USER_TYPE_GUEST;
-        $actionIsLoginPost = $observer->getData('controller_action') instanceof LoginPost;
+        $userIsQuest =
+            $this->messageAuthor->getUserType() === \Magento\Authorization\Model\UserContextInterface::USER_TYPE_GUEST;
+        $actionIsLoginPost =
+            $observer->getData('controller_action') instanceof \Magento\Customer\Controller\Account\LoginPost;
+
         if ($userIsQuest && $actionIsLoginPost) {
             $this->messageAuthor->setQuestHash($this->sessionManager->getSessionId());
         }

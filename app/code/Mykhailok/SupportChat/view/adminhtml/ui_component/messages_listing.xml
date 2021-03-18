@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">messages_listing.messages_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>messages_columns</spinner>
+        <deps>
+            <dep>messages_listing.messages_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="messages_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+            <filterUrlParams>
+                <param name="chat_id">*</param>
+            </filterUrlParams>
+        </settings>
+        <aclResource>Mykhailok_SupportChat::chat-listing</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="messages_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <filterSearch name="fulltext"/>
+    </listingToolbar>
+    <columns name="messages_columns">
+        <settings>
+            <editorConfig>
+                <param name="enabled" xsi:type="boolean">false</param>
+            </editorConfig>
+        </settings>
+        <column name="author_type" component="Magento_Ui/js/grid/columns/select" sortOrder="10">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Author Type</label>
+                <dataType>select</dataType>
+                <options class="Mykhailok\SupportChat\Model\Options\AuthorType"/>
+            </settings>
+        </column>
+        <column name="author_name" sortOrder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Author Name</label>
+            </settings>
+        </column>
+        <column name="message" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Message</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="60">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Sent At</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

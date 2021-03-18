@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <!--Oldest table. Deprecated. Removed on the upgrade script. -->
     <table name="mykhailok_support_chat" resource="default" engine="innodb" comment="Support Chat">
         <column xsi:type="int"
                 name="support_chat_message_id"
@@ -73,5 +74,110 @@
                     referenceColumn="website_id"
                     onDelete="CASCADE"
         />
+    </table>
+    <!-- Actual tables below. -->
+    <table name="my_chat" resource="default" engine="innodb" comment="Support Chat">
+        <column xsi:type="int"
+                name="id"
+                padding="10"
+                unsigned="true"
+                nullable="false"
+                identity="true"
+                comment="Chat Id"
+        />
+        <column xsi:type="varchar"
+                name="hash"
+                length="255"
+                nullable="false"
+                comment="Chat Hash"
+        />
+        <column xsi:type="smallint"
+                name="website_id"
+                padding="5"
+                unsigned="true"
+                nullable="false"
+                comment="Store Website ID"
+                default="0"
+        />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="MY_CHAT_WEBSITE_ID" indexType="btree">
+            <column name="website_id"/>
+        </index>
+        <constraint xsi:type="foreign"
+                    referenceId="MY_CHAT_WS_ID_STORE_WS_WS_ID"
+                    table="my_chat"
+                    column="website_id"
+                    referenceTable="store_website"
+                    referenceColumn="website_id"
+                    onDelete="CASCADE"
+        />
+    </table>
+    <table name="my_chat_message" resource="default" engine="innodb" comment="Support Chat Message">
+        <column xsi:type="int"
+                name="id"
+                padding="10"
+                unsigned="true"
+                nullable="false"
+                identity="true"
+                comment="Chat Message Id"
+        />
+        <column xsi:type="int"
+                name="chat_id"
+                padding="10"
+                unsigned="true"
+                nullable="false"
+                comment="Support Chat ID"
+        />
+        <column xsi:type="tinyint"
+                name="author_type"
+                padding="2"
+                unsigned="true"
+                nullable="false"
+                comment="Will be either customer or admin"
+        />
+        <column xsi:type="int"
+                name="author_id"
+                padding="10"
+                unsigned="true"
+                nullable="true"
+                comment="Author ID"
+        />
+        <column xsi:type="varchar"
+                name="author_name"
+                length="255"
+                nullable="true"
+                comment="Author Name"
+        />
+        <column xsi:type="text"
+                name="message"
+                nullable="false"
+                comment="Message Text"
+        />
+        <column xsi:type="timestamp"
+                name="created_at"
+                on_update="false"
+                nullable="false"
+                default="CURRENT_TIMESTAMP"
+                comment="Creation Time"
+        />
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <index referenceId="MY_CHAT_MESSAGE_CHAT_ID" indexType="btree">
+            <column name="chat_id"/>
+        </index>
+        <constraint xsi:type="foreign"
+                    referenceId="MY_CHAT_MESSAGE_CHAT_ID_MY_CHAT_ID"
+                    table="my_chat_message"
+                    column="chat_id"
+                    referenceTable="my_chat"
+                    referenceColumn="id"
+                    onDelete="CASCADE"
+        />
+        <index referenceId="MY_CHAT_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
     </table>
 </schema>

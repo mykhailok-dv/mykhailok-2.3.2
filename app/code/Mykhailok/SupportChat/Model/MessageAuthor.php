@@ -3,12 +3,7 @@ declare(strict_types=1);
 
 namespace Mykhailok\SupportChat\Model;
 
-use Magento\Authorization\Model\UserContextInterface;
-use Magento\User\Model\User;
-
 /**
- * Class MessageAuthor
- * Class returned an user fields: id and name which depends of user context.
  * @method int getId()
  * @method $this setId(int $id)
  * @method string getName()
@@ -20,30 +15,20 @@ use Magento\User\Model\User;
  */
 class MessageAuthor extends \Magento\Framework\DataObject
 {
-    /**
-     * @var \Magento\Backend\Model\Auth\Session
-     */
-    private $backendSession;
+    /** @var \Magento\Backend\Model\Auth\Session $backendSession */
+    private \Magento\Backend\Model\Auth\Session $backendSession;
 
-    /**
-     * @var \Magento\Customer\Model\Session
-     */
-    private $customerSession;
+    /** @var \Magento\Customer\Model\Session $customerSession */
+    private \Magento\Customer\Model\Session $customerSession;
 
-    /**
-     * @var \Magento\Framework\App\RequestInterface
-     */
-    private $request;
+    /** @var \Magento\Framework\App\RequestInterface $request */
+    private \Magento\Framework\App\RequestInterface $request;
 
-    /**
-     * @var \Magento\Framework\Session\SessionManager
-     */
-    private $sessionManager;
+    /** @var \Magento\Framework\Session\SessionManager $sessionManager */
+    private \Magento\Framework\Session\SessionManager $sessionManager;
 
-    /**
-     * @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection
-     */
-    private $chatMessageCollection;
+    /** @var ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection */
+    private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollection;
 
     /**
      * MessageAuthor constructor.
@@ -86,35 +71,36 @@ class MessageAuthor extends \Magento\Framework\DataObject
 
     /**
      * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function _init(): void
     {
         $this->setType($this->getUserType());
 
         switch ($this->_data['type']) {
-            case UserContextInterface::USER_TYPE_ADMIN:
+            case \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN:
                 /** @var \Magento\User\Model\User $user */
                 $user = $this->backendSession->getUser();
-                if ($user instanceof User) {
+                if ($user instanceof \Magento\User\Model\User) {
                     $this->setId((int)$user->getId())
                         ->setName($user->getName())
-                        ->setHash($this->request->getParam('chat_hash', null));
+                        ->setHash($this->request->getParam('chat_hash'));
                 }
                 break;
-            case UserContextInterface::USER_TYPE_CUSTOMER:
+            case \Magento\Authorization\Model\UserContextInterface::USER_TYPE_CUSTOMER:
                 $customer = $this->customerSession->getCustomer();
                 $chatHash = $this->chatMessageCollection->create()
-                    ->addAuthorIdFilter((int)$this->_getData('id'))
-                    ->addAuthorTypeFilter((int)$this->_getData('type'))
-                    ->setPageSize(1)
-                    ->getFirstItem()
-                    ->getData('chat_hash') ?? $this->sessionManager->getSessionId();
+                        ->addAuthorIdFilter((int)$this->_getData('id'))
+                        ->addAuthorTypeFilter((int)$this->_getData('type'))
+                        ->setPageSize(1)
+                        ->getFirstItem()
+                        ->getData('chat_hash') ?? $this->sessionManager->getSessionId();
 
-                $this->setId((int) $customer->getId())
+                $this->setId((int)$customer->getId())
                     ->setName($customer->getName())
                     ->setHash($chatHash);
                 break;
-            case UserContextInterface::USER_TYPE_GUEST:
+            case \Magento\Authorization\Model\UserContextInterface::USER_TYPE_GUEST:
             default:
                 $this->setId(0)
                     ->setName('Quest #' . microtime(true))
@@ -123,25 +109,34 @@ class MessageAuthor extends \Magento\Framework\DataObject
         }
     }
 
+    /**
+     * @param string $chatHash
+     */
     public function setQuestHash(string $chatHash): void
     {
         $this->setData('questHash', $chatHash);
     }
 
+    /**
+     * @return string
+     */
     public function getQuestHash(): string
     {
         return (string)$this->getData('questHash');
     }
 
+    /**
+     * @return int
+     */
     public function getUserType(): int
     {
-        if (($user = $this->backendSession->getUser()) && $user instanceof User) {
-            return UserContextInterface::USER_TYPE_ADMIN;
+        if (($user = $this->backendSession->getUser()) && $user instanceof \Magento\User\Model\User) {
+            return \Magento\Authorization\Model\UserContextInterface::USER_TYPE_ADMIN;
         }
         if ($user = $this->customerSession->getCustomerId()) {
-            return UserContextInterface::USER_TYPE_CUSTOMER;
+            return \Magento\Authorization\Model\UserContextInterface::USER_TYPE_CUSTOMER;
         }
 
-        return UserContextInterface::USER_TYPE_GUEST;
+        return \Magento\Authorization\Model\UserContextInterface::USER_TYPE_GUEST;
     }
 }
