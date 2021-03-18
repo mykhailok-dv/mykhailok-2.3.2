@@ -8,6 +8,9 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
     private \Magento\Store\Model\StoreManagerInterface $storeManager;
 
+    /** @var \Magento\Framework\App\State $state */
+    private \Magento\Framework\App\State $state;
+
     /**
      * Collection constructor.
      * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
@@ -15,6 +18,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\State $state
      * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
      * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
      */
@@ -24,6 +28,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\App\State $state,
         \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
         \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     ) {
@@ -36,6 +41,7 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             $resource
         );
         $this->storeManager = $storeManager;
+        $this->state = $state;
     }
 
     /**
@@ -82,6 +88,10 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      */
     protected function _renderFiltersBefore()
     {
+        if ($this->state->getAreaCode() === \Magento\Framework\App\Area::AREA_WEBAPI_REST) {
+            return;
+        }
+
         $this->addWebsiteFilter((int)$this->storeManager->getWebsite()->getId());
     }
 }

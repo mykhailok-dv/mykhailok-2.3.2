@@ -88,12 +88,21 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
-     * @param $authorId
+     * @param $chatId
      * @return $this
      */
-    public function addChatIdFilter($authorId): self
+    public function addChatIdFilter($chatId): self
     {
-        return $this->addFieldToFilter('chat_id', $authorId);
+        return $this->addFieldToFilter('chat_id', $chatId);
+    }
+
+    /**
+     * @param int $messageId
+     * @return $this
+     */
+    public function addMessageIdFilter(int $messageId): self
+    {
+        return $this->addFieldToFilter('id', $messageId);
     }
 
     /**

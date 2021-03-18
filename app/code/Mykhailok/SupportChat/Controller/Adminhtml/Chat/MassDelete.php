@@ -52,7 +52,7 @@ class MassDelete extends \Magento\Framework\App\Action\Action
 
             $transaction->delete();
             $collectionSize = $collection->count();
-            $this->messageManager->addSuccessMessage(__('%1 preference(s) have been deleted.', $collectionSize));
+            $this->messageManager->addSuccessMessage(__('%1 chat(s) have been deleted.', $collectionSize));
         } catch (\Exception|\Magento\Framework\Exception\LocalizedException $e) {
             $this->messageManager->addExceptionMessage($e);
         }
