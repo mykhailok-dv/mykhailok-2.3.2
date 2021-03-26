@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<page layout="1column"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Mykhailok\AskAboutThisProduct\Block\Product\View\Question"
+                   name="product.info.ask-form"
+                   template="Mykhailok_AskAboutThisProduct::product/view/ask-form.phtml"
+                   after="product.info.details">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="mykhailok-question-form" xsi:type="array">
+                                <item name="component" xsi:type="string">Mykhailok_AskAboutThisProduct/js/view/question</item>
+                                <item name="template" xsi:type="string">Mykhailok_AskAboutThisProduct/ask-question-form</item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

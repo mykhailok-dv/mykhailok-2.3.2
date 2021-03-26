@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <trans_email>
+            <product_manager_support>
+                <recipient_email>product-support@example.com</recipient_email>
+                <recipient_name>Product Manager Support</recipient_name>
+            </product_manager_support>
+        </trans_email>
+        <catalog>
+            <review>
+                <my_question_is_visible>1</my_question_is_visible>
+            </review>
+        </catalog>
+    </default>
+</config>

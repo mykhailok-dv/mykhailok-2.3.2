@@ -1,0 +1,13 @@
+<?php
+/** @var \Mykhailok\AskAboutThisProduct\Block\Product\View\Question $block */
+?>
+<div data-bind="scope:'mykhailok-question-form'">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+        }
+    }
+</script>
