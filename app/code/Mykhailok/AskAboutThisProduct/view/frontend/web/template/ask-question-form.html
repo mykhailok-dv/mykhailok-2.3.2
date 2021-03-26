@@ -1,0 +1,57 @@
+<div id="mykhailok-question-form">
+    <div class="product-question-form-wrapper"
+         id="mykhailok-product-question">
+        <span class="q-form-state-trigger q-open-form-title"
+              ifnot="isVisible"
+              translate="'Do you want to clarify something about project? Ask us.'"
+              data-bind="click: toggleForm"
+        ></span>
+        <span class="q-form-state-trigger q-hide-form-title"
+              if="isVisible"
+              translate="'Close'"
+              data-bind="click: toggleForm"
+        ></span>
+        <form class="form" id="question-form" action="javascript:void(0);" method="post"
+              if="isVisible"
+              data-mage-init='{"validation": {}}'
+              data-bind="submit: saveQuestion">
+            <div class="field textarea required name_field">
+                <label class="label" for="q-name_field">
+                    <span translate="'Your name'"></span>
+                </label>
+                <div class="control">
+                    <input id="q-name_field" name="q-name" type="text"
+                           data-validate='{"required":true}'
+                           data-bind="value: qNameValue, attr: { title: $t('Your name') }">
+                </div>
+            </div>
+            <div class="field textarea required email_field">
+                <label class="label" for="q-email_field">
+                    <span translate="'Your email'"></span>
+                </label>
+                <div class="control">
+                    <input id="q-email_field" name="q-email" type="text" aria-required="true"
+                           data-validate='{"required":true}'
+                           data-bind="value: qEmailValue, attr: { title: $t('Your email') }">
+                </div>
+            </div>
+            <div class="field textarea required message_field">
+                <label class="label" for="q-message_field">
+                    <span translate="'Leave your question'"></span>
+                </label>
+                <div class="control">
+                <textarea id="q-message_field" name="q-message" type="text" aria-required="true" rows="2"
+                          data-validate='{"required":true}'
+                          data-bind="value: qMessageValue, attr: { title: $t('Your message') }"></textarea>
+                </div>
+            </div>
+            <div class="actions-toolbar form-buttons">
+                <div class="primary">
+                    <button type="submit" class="action submit primary" data-bind="click: saveQuestion">
+                        <span translate="'Send'"></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

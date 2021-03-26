@@ -338,6 +338,7 @@ return [
         'Klarna_Kp' => 1,
         'Klarna_Onsitemessaging' => 1,
         'Klarna_KpGraphQl' => 1,
+        'Mykhailok_AskAboutThisProduct' => 1,
         'Mykhailok_Catalog' => 1,
         'Mykhailok_Cms' => 1,
         'Mykhailok_ControllerDemo' => 1,
