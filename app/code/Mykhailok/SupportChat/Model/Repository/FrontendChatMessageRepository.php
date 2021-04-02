@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Mykhailok\SupportChat\Model\Repository;
 
 class FrontendChatMessageRepository extends AbstractChatMessageRepository
+    implements \Mykhailok\SupportChat\Api\FrontendChatMessageRepositoryInterface
 {
     /** @var \Magento\Framework\Api\FilterBuilder $filterBuilder */
     protected \Magento\Framework\Api\FilterBuilder $filterBuilder;
@@ -120,9 +121,10 @@ class FrontendChatMessageRepository extends AbstractChatMessageRepository
 
         $filterGroups = $searchCriteria->getFilterGroups();
         foreach ($filterGroups as &$filterGroup) {
-            $existingFilters = $filterGroup->getFilters();
-            $updatedFilters = array_merge($existingFilters, [$chatIdFilter]);
-            $filterGroup->setFilters($updatedFilters);
+            $filterGroup->setFilters(array_merge(
+                $filterGroup->getFilters(),
+                [$chatIdFilter])
+            );
         }
 
         if (empty($filterGroups)) {

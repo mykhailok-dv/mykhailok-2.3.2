@@ -52,4 +52,32 @@
             </argument>
         </arguments>
     </virtualType>
+    <virtualType name="Mykhailok\SupportChat\Model\Options\PriorityOption"
+                 type="Mykhailok\SupportChat\Model\Options\AbstractOption">
+        <arguments>
+            <argument name="options" xsi:type="array">
+                <item name="0" xsi:type="string">Regular</item>
+                <item name="1" xsi:type="string">Waiting</item>
+                <item name="2" xsi:type="string">Immediate</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Mykhailok\SupportChat\Model\Options\ActiveOption"
+                 type="Mykhailok\SupportChat\Model\Options\AbstractOption">
+        <arguments>
+            <argument name="options" xsi:type="array">
+                <item name="0" xsi:type="string">No</item>
+                <item name="1" xsi:type="string">Yes</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="mykhailok_supportchat_chat_message_sample_data" xsi:type="object">
+                    Mykhailok\SupportChat\Console\Command\ChatMessageSampleData
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>

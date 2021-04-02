@@ -99,6 +99,18 @@
                 comment="Store Website ID"
                 default="0"
         />
+        <column  xsi:type="smallint"
+                 name="priority"
+                 unsigned="true"
+                 nullable="false"
+                 comment="Chat priority."
+                 default="0"
+        />
+        <column xsi:type="boolean"
+                name="is_active"
+                comment="The chat is active or not."
+                default="true"
+        />
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id"/>
         </constraint>

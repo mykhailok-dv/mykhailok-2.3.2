@@ -9,6 +9,7 @@ class BlockActions extends \Magento\Ui\Component\Listing\Columns\Column
      * Url path
      */
     public const URL_PATH_DELETE = 'my_chat/chat/delete';
+    public const URL_PATH_MARK_INACTIVE = 'my_chat/chat/toggleActive';
     public const URL_PATH_DETAILS = 'my_chat/chat/details';
 
     /** @var \Magento\Framework\UrlInterface $urlBuilder */
@@ -78,6 +79,23 @@ class BlockActions extends \Magento\Ui\Component\Listing\Columns\Column
                                     'Are you sure you want to delete the chat with %1 customer?',
                                     $authorName
                                 ),
+                            ],
+                            'post' => true,
+                        ],
+                        'inactive' => [
+                            'href' => $this->urlBuilder->getUrl(
+                                static::URL_PATH_MARK_INACTIVE,
+                                [
+                                    'id' => $item['id'],
+                                ]
+                            ),
+                            'label' => $item['is_active']
+                                ? __('Mark inactive')
+                                : __('Mark active'),
+                            'confirm' => [
+                                'title' => $item['is_active']
+                                    ? __('Mark chat with %1 as inactive', $authorName)
+                                    : __('Mark chat with %1 as active', $authorName),
                             ],
                             'post' => true,
                         ],

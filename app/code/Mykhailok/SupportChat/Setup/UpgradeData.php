@@ -32,6 +32,7 @@ class UpgradeData implements \Magento\Framework\Setup\UpgradeDataInterface
      * @param \Magento\Framework\Setup\ModuleDataSetupInterface $setup
      * @param \Magento\Framework\Setup\ModuleContextInterface $context
      * @throws \Zend_Db_Statement_Exception
+     * @throws \Exception
      */
     public function upgrade(
         \Magento\Framework\Setup\ModuleDataSetupInterface $setup,
