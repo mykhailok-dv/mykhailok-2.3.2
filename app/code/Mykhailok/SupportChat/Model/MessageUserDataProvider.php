@@ -23,18 +23,22 @@ class MessageUserDataProvider
     /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
     private \Magento\Store\Model\StoreManagerInterface $storeManager;
 
+    private \Magento\Framework\App\Response\RedirectInterface $redirect;
+
     public function __construct(
         \Mykhailok\SupportChat\Model\ChatMessageFactory $chatMessageFactory,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat $resourceModelChat,
         \Mykhailok\SupportChat\Model\ResourceModel\Chat\CollectionFactory $chatCollectionFactory,
         \Mykhailok\SupportChat\Model\MessageAuthor $messageAuthor,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\App\Response\RedirectInterface $redirect
     ) {
         $this->chatMessageFactory = $chatMessageFactory;
         $this->resourceModelChat = $resourceModelChat;
         $this->chatCollectionFactory = $chatCollectionFactory;
         $this->messageAuthor = $messageAuthor;
         $this->storeManager = $storeManager;
+        $this->redirect = $redirect;
     }
 
     /**
@@ -59,6 +63,7 @@ class MessageUserDataProvider
 
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @noinspection PhpFieldAssignmentTypeMismatchInspection
      */
     public function getChatWithUserData(): \Mykhailok\SupportChat\Model\Chat
     {
@@ -67,19 +72,42 @@ class MessageUserDataProvider
             $chatCollection = $this->chatCollectionFactory->create();
             $chatCollection->addHashFilter($this->messageAuthor->getHash());
 
-            /** @var \Mykhailok\SupportChat\Model\Chat $chatModel */
-            $chatModel = $chatCollection->getFirstItem();
+            $this->chatModel = $chatCollection->getFirstItem();
+            if ($this->refererPageIsCheckout()) {
+                $this->chatModel->setPriority(\Mykhailok\SupportChat\Model\Chat::IMMEDIATE_PRIORITY);
+            }
 
-            if ($chatModel->getId()) {
-                $this->chatModel = $chatModel;
-            } else {
-                $this->chatModel = $chatModel
+            if (!$this->chatModel->getId()) {
+                $this->chatModel
                     ->setHash($this->messageAuthor->getHash())
                     ->setWebsiteId((int)$this->storeManager->getWebsite()->getId());
-                $this->resourceModelChat->save($chatModel);
             }
+
+            if (!$this->chatModel->getIsActive()) {
+                $this->chatModel->setIsActive(true);
+            }
+
+            $this->resourceModelChat->save($this->chatModel);
         }
 
         return $this->chatModel;
+    }
+
+    /**
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function refererPageIsCheckout(): bool
+    {
+        $refererUrl = $this->redirect->getRefererUrl();
+        $baseUrl = $this->storeManager->getStore()->getBaseUrl();
+        $refererUrl = str_replace($baseUrl, '', $refererUrl);
+        $refererUrl = trim($refererUrl, '/');
+        $refererUrlParts = explode('?', $refererUrl);
+        $clearRefererUrl = array_shift($refererUrlParts);
+        unset($refererUrlParts, $refererUrl);
+        $clearRefererUrlParts = explode('/', $clearRefererUrl);
+
+        return $clearRefererUrlParts[0] === 'checkout';
     }
 }

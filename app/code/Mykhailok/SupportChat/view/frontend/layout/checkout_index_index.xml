@@ -1,0 +1,15 @@
+<?xm version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="page.bottom.container">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="mykhailok.supportChat.openButton"
+                   template="Mykhailok_SupportChat::open_button.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   after="mykhailok.supportChat.openButton"
+                   name="mykhailok.supportChat.chat"
+                   template="Mykhailok_SupportChat::chat.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

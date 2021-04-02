@@ -5,14 +5,13 @@ namespace Mykhailok\SupportChat\Observer\Grid;
 
 class ChatCollection implements \Magento\Framework\Event\ObserverInterface
 {
-    /** @var \Magento\Framework\App\ResourceConnection $resourceConnection */
     private \Magento\Framework\App\ResourceConnection $resourceConnection;
 
-    /** @var \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory */
     private \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory;
 
-    /** @var \Magento\Framework\App\Request\Http $request */
     private \Magento\Framework\App\Request\Http $request;
+
+    private \Mykhailok\SupportChat\Model\ResourceModel\Chat\Collection $chatCollection;
 
     /**
      * ChatCollection constructor.
@@ -23,11 +22,13 @@ class ChatCollection implements \Magento\Framework\Event\ObserverInterface
     public function __construct(
         \Magento\Framework\App\ResourceConnection $resourceConnection,
         \Mykhailok\SupportChat\Model\ResourceModel\ChatMessage\CollectionFactory $chatMessageCollectionFactory,
+        \Mykhailok\SupportChat\Model\ResourceModel\Chat\Collection $chatCollection,
         \Magento\Framework\App\Request\Http $request
     ) {
         $this->resourceConnection = $resourceConnection;
         $this->chatMessageCollectionFactory = $chatMessageCollectionFactory;
         $this->request = $request;
+        $this->chatCollection = $chatCollection;
     }
 
     /**
@@ -39,39 +40,9 @@ class ChatCollection implements \Magento\Framework\Event\ObserverInterface
             return;
         }
 
-        $chatMessageTableName = $this->resourceConnection->getTableName('my_chat_message');
-        $gridCollectionSelect = $observer->getData('gridCollection')->getSelect();
-
-        $chatMessageChildQuery = $this->chatMessageCollectionFactory->create()->getSelect();
-        $chatMessageChildQuery
-            ->reset(\Zend_Db_Select::COLUMNS)
-            ->columns([
-                'chat_id',
-                'last_message_id' => new \Zend_Db_Expr("MAX(id)"),
-                'count_of_messages' => new \Zend_Db_Expr("COUNT(id)")
-            ])
-            ->group('chat_id');
-
-        $gridCollectionSelect
-            ->join(
-                ['cm' => $chatMessageTableName],
-                'main_table.id = cm.chat_id'
-            )->join(
-                ['cm_child' => $chatMessageChildQuery],
-                'cm_child.last_message_id = cm.id'
-            )->reset(
-                \Zend_Db_Select::COLUMNS
-            )->columns([
-                'id' => 'main_table.id',
-                'hash' => 'main_table.hash',
-                'website_id' => 'main_table.website_id',
-                'author_type' => 'cm.author_type',
-                'author_id' => 'cm.author_type',
-                'author_name' => 'cm.author_type',
-                'message' => 'cm.message',
-                'created_at' => 'cm.created_at',
-                'message_count' => 'cm_child.count_of_messages',
-            ]);
+        /** @var \Mykhailok\SupportChat\Model\ResourceModel\Chat\Grid\Collection $gridCollection */
+        $gridCollection = $observer->getData('gridCollection');
+        $this->chatCollection->addChatWithLatestMessageFilter($gridCollection);
     }
 
     /**

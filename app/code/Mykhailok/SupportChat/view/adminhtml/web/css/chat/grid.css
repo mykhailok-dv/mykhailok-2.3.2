@@ -1,0 +1,22 @@
+.admin__data-grid-wrap {
+    overflow-x: visible;
+}
+td {
+    border: 1px solid #000000;
+}
+
+td.inactive {
+    background-color: #CDCDCD;
+}
+
+td.regular {
+    background-color: #90EE90;
+}
+
+td.waiting {
+    background-color: #FFC300;
+}
+
+td.immediate {
+    background-color: #FF5733;
+}
